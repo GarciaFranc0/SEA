@@ -130,7 +130,46 @@ def calcular_promedio(id_estudiante):
     else:
         print("El estudiante no tiene calificaciones registradas.")
 
+def porcentaje_aprobados(id_materia):
+    calificaciones_materia = [cal[2] for cal in calificaciones if cal[0] == id_materia]
+    if calificaciones_materia:
+        aprobados = len([cal for cal in calificaciones_materia if cal >= 4])
+        porcentaje = (aprobados / len(calificaciones_materia)) * 100
+        print(f"El porcentaje de estudiantes aprobados en la materia {materias[id_materia-1][1]} es: {porcentaje}%")
+    else:
+        print("No hay calificaciones registradas para esta materia.")
 
+def mostrar_menu():
+    print("1. Estudiantes")
+    print("2. Materias")
+    print("3. Calificaciones")
+    print("4. Salir")
+
+def sub_menu_estudiantes():
+    print("1. Agregar estudiante")
+    print("2. Mostrar estudiante")
+    print("3. Buscar estudiante")
+    print("4. Eliminar estudiante")
+    print("5. Actualizar estudiante")
+    print("6. Calcular promedio de estudiante")
+    print("7. Volver al menú principal")
+
+def sub_menu_materias():
+    print("1. Agregar materia")
+    print("2. Mostrar materia")
+    print("3. Buscar materia")
+    print("4. Eliminar materia")
+    print("5. Actualizar materia")
+    print("6. Porcentaje de aprobados en materia")
+    print("7. Volver al menú principal")
+
+def sub_menu_calificaciones():
+    print("1. Agregar calificación")
+    print("2. Mostrar calificaciones de estudiante")
+    print("3. Buscar calificación")
+    print("4. Eliminar calificación")
+    print("5. Actualizar calificación")
+    print("6. Volver al menú principal")
 
 # Matrices de entidades
 estudiantes = [[1, "Franco", "Garcia", 1001], [2, "Maria", "Lopez", 1002], [3, "Juan", "Perez", 1003], [4, "Ana", "Gomez", 1004], [5, "Luis", "Martinez", 1005]]
@@ -138,5 +177,6 @@ materias = [[1, "Programacion"], [2, "Matematicas"], [3, "Fisica"], [4, "Quimica
 calificaciones = [[1, 1, 10], [2, 1, 5], [3, 1, 2], [4, 1, 3], [5, 1, 9], [1, 2, 2], [2, 2, 4], [3, 2, 5], [4, 2, 7], [5, 2, 3], [1, 3, 4], [2, 3, 6], [3, 3, 2], [4, 3, 10], [5, 3, 0], [1, 4, 8], [2, 4, 9], [3, 4, 8], [4, 4, 7], [5, 4, 5], [1, 5, 10], [2, 5, 9], [3, 5, 2], [4, 5, 3], [5, 5, 0]]
 
 # Menu principal
-mostrar_calificaciones(2)
-prom = calcular_promedio(2)
+print("Bienvenido al sistema de gestión de estudiantes y materias.")
+
+
