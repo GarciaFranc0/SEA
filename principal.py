@@ -97,15 +97,36 @@ def eliminar_calificacion(id_materia, id_estudiante):
     else:
         print("No hay calificaciones registradas.")
 
-def actualizar_estudiante():
-    ...
+def actualizar_estudiante(id, nuevo_nombre, nuevo_apellido, nuevo_legajo):
+    for estudiante in estudiantes:
+        if estudiante[0] == id:
+            estudiante[1] = nuevo_nombre
+            estudiante[2] = nuevo_apellido
+            estudiante[3] = nuevo_legajo
+            print("Estudiante actualizado correctamente.")
+    if id not in [estudiante[0] for estudiante in estudiantes]:
+        print("El estudiante no existe.")
+    
 
-def actualizar_materia():
-    ...
+def actualizar_materia(id, nueva_materia):
+    for materia in materias:
+        if materia[0] == id:
+            materia[1] = nueva_materia
+            print("Materia actualizada correctamente.")
+    if id not in [materia[0] for materia in materias]:
+        print("La materia no existe.")
 
-def actualizar_calificacion():
-    ...
 
+def actualizar_calificacion(id_materia, id_estudiante, nueva_calificacion):
+    if calificaciones:
+        for calificacion in calificaciones:
+            if calificacion[0] == id_materia and calificacion[1] == id_estudiante:
+                calificacion[2] = nueva_calificacion
+                print("Calificación actualizada correctamente.")
+        if [id_materia, id_estudiante] not in [[cal[0], cal[1]] for cal in calificaciones]:
+            print("La calificación no existe.")
+    else:   
+        print("No hay calificaciones registradas.")
 
 
 # Matrices de entidades
@@ -114,3 +135,7 @@ materias = [[1, "Programacion"], [2, "Matematicas"], [3, "Fisica"], [4, "Quimica
 calificaciones = []
 
 # Menu principal
+
+actualizar_estudiante(6, "Carlos", "Rodriguez", 1006)
+actualizar_materia(5, "Biologia")
+actualizar_calificacion(1, 2, 9.5)
