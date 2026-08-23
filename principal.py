@@ -64,9 +64,10 @@ def buscar_calificacion(id_materia, id_estudiante):
                 calificacion_encontrada = calificacion
         if calificacion_encontrada not in calificaciones:
             calificacion_encontrada = "La calificación no existe."
-        return calificacion_encontrada
     else:
-        return "No hay calificaciones registradas."
+        calificacion_encontrada = "No hay calificaciones registradas."
+    return calificacion_encontrada
+
 
 def eliminar_estudiante(id):
     for estudiante in estudiantes:
@@ -135,7 +136,3 @@ materias = [[1, "Programacion"], [2, "Matematicas"], [3, "Fisica"], [4, "Quimica
 calificaciones = []
 
 # Menu principal
-
-actualizar_estudiante(6, "Carlos", "Rodriguez", 1006)
-actualizar_materia(5, "Biologia")
-actualizar_calificacion(1, 2, 9.5)
