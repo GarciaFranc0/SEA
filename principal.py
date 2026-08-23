@@ -68,14 +68,34 @@ def buscar_calificacion(id_materia, id_estudiante):
     else:
         return "No hay calificaciones registradas."
 
-def eliminar_estudiante():
-    ...
+def eliminar_estudiante(id):
+    for estudiante in estudiantes:
+        if estudiante[0] == id:
+            estudiantes.remove(estudiante)
+            print("Estudiante eliminado correctamente.")
+    if id not in estudiantes:
+        print("El estudiante no existe.")
+    
+    
 
-def eliminar_materia():
-    ...
+def eliminar_materia(id):
+    for materia in materias:
+        if materia[0] == id:
+            materias.remove(materia)
+            print("Materia eliminada correctamente.")
+    if id not in materias:
+        print("La materia no existe.")
 
-def eliminar_calificacion():
-    ...
+def eliminar_calificacion(id_materia, id_estudiante):
+    if calificaciones:
+        for calificacion in calificaciones:
+            if calificacion[0] == id_materia and calificacion[1] == id_estudiante:
+                calificaciones.remove(calificacion)
+                print("Calificación eliminada correctamente.")
+        if [id_materia, id_estudiante] not in [[cal[0], cal[1]] for cal in calificaciones]:
+            print("La calificación no existe.")
+    else:
+        print("No hay calificaciones registradas.")
 
 def actualizar_estudiante():
     ...
@@ -94,10 +114,3 @@ materias = [[1, "Programacion"], [2, "Matematicas"], [3, "Fisica"], [4, "Quimica
 calificaciones = []
 
 # Menu principal
-
-estudianteq = buscar_estudiante(1)
-print(estudianteq)
-materiaq = buscar_materia(1)
-print(materiaq)
-calificacionq = buscar_calificacion(0, 0)
-print(calificacionq)
