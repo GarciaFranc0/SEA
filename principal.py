@@ -56,7 +56,6 @@ def buscar_materia(id):
         materia_encontrada = "La materia no existe."
     return materia_encontrada
 
-
 def buscar_calificacion(id_materia, id_estudiante):
     calificacion_encontrada = None
     for calificacion in calificaciones:
@@ -66,8 +65,6 @@ def buscar_calificacion(id_materia, id_estudiante):
         calificacion_encontrada = "La calificación no existe."
     return calificacion_encontrada
 
-
-
 def eliminar_estudiante(id):
     for estudiante in estudiantes:
         if estudiante[0] == id:
@@ -76,8 +73,6 @@ def eliminar_estudiante(id):
     if id not in estudiantes:
         print("El estudiante no existe.")
     
-    
-
 def eliminar_materia(id):
     for materia in materias:
         if materia[0] == id:
@@ -94,7 +89,6 @@ def eliminar_calificacion(id_materia, id_estudiante):
     if [id_materia, id_estudiante] not in [[cal[0], cal[1]] for cal in calificaciones]:
         print("La calificación no existe.")
 
-
 def actualizar_estudiante(id, nuevo_nombre, nuevo_apellido, nuevo_legajo):
     for estudiante in estudiantes:
         if estudiante[0] == id:
@@ -105,7 +99,6 @@ def actualizar_estudiante(id, nuevo_nombre, nuevo_apellido, nuevo_legajo):
     if id not in [estudiante[0] for estudiante in estudiantes]:
         print("El estudiante no existe.")
     
-
 def actualizar_materia(id, nueva_materia):
     for materia in materias:
         if materia[0] == id:
@@ -113,7 +106,6 @@ def actualizar_materia(id, nueva_materia):
             print("Materia actualizada correctamente.")
     if id not in [materia[0] for materia in materias]:
         print("La materia no existe.")
-
 
 def actualizar_calificacion(id_materia, id_estudiante, nueva_calificacion):
         for calificacion in calificaciones:
@@ -170,6 +162,45 @@ def sub_menu_calificaciones():
     print("4. Eliminar calificación")
     print("5. Actualizar calificación")
     print("6. Volver al menú principal")
+
+def login_admin():
+    valido = False
+    usuario = input("Ingrese su nombre de usuario: ")
+    contrasena = input("Ingrese su contraseña: ")
+    if usuario == "admin" and contrasena == "admin":
+        print("Inicio de sesión exitoso.")
+        valido = True
+    else:
+        print("Usuario o contraseña incorrectos.")
+        cont = 0
+        while valido == False and cont < 5:
+            usuario = input("Ingrese su nombre de usuario: ")
+            contrasena = input("Ingrese su contraseña: ")
+            if usuario == "admin" and contrasena == "admin":
+                print("Inicio de sesión exitoso.")
+                valido = True
+            else:
+                print("Usuario o contraseña incorrectos.")
+                cont += 1
+    return valido
+
+def login_estudiante():
+    legajo = input("Ingrese su número de legajo: ")
+    valido = False
+    if legajo in [str(estudiante[3]) for estudiante in estudiantes]:
+        print("Inicio de sesión exitoso.")
+        valido = True
+    else:
+        print("Legajo incorrecto.")
+        cont = 0
+        while valido == False and cont < 5:
+            legajo = input("Ingrese su número de legajo: ")
+            if legajo in [str(estudiante[3]) for estudiante in estudiantes]:
+                print("Inicio de sesión exitoso.")
+                valido = True
+            else:
+                print("Legajo incorrecto.")
+                cont += 1
 
 # Matrices de entidades
 estudiantes = [[1, "Franco", "Garcia", 1001], [2, "Maria", "Lopez", 1002], [3, "Juan", "Perez", 1003], [4, "Ana", "Gomez", 1004], [5, "Luis", "Martinez", 1005]]
