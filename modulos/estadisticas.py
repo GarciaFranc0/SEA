@@ -41,7 +41,7 @@ def porcentaje_promedio_alto(estudiantes, calificaciones):
     porcentaje = (alumnos_calif_alta / len(estudiantes)) * 100
     return porcentaje
 
-def estadistica_completa(estudiantes, calificaciones, materias, id_estudiante):
+def estadistica_completa_estudiante(estudiantes, calificaciones, materias, id_estudiante):
     calif_est = []
     for calificacion in calificaciones:
         if calificacion[1] == id_estudiante:
@@ -50,7 +50,8 @@ def estadistica_completa(estudiantes, calificaciones, materias, id_estudiante):
     promedio = calcular_promedio(calificaciones, id_estudiante)
     max_nota = max(calif_est)
     min_nota = min(calif_est)
-    return (f"cursa: {total_materias} materias, tiene un promedio de {promedio}, su nota mas alta es: {max_nota} y su mas baja es: {min_nota}")
+    estadistica_completa = [total_materias, promedio, max_nota, min_nota]
+    return estadistica_completa
 
 def promedio_materia(calificaciones, id_materia):
     notas_materia = [cal[2] for cal in calificaciones if cal[0] == id_materia]
