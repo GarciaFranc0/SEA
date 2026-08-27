@@ -55,7 +55,7 @@ def eliminar_estudiante(estudiantes, id_alumno):
     else:
         print("El estudiante no existe.")
     
-def eliminar_materia(id):
+def eliminar_materia(materias, id):
     for materia in materias:
         if materia[0] == id:
             materias.remove(materia)
@@ -74,7 +74,7 @@ def eliminar_calificacion(calificaciones, id_materia, id_estudiante):
     else:
         print("La calificación no existe.")
 
-def actualizar_estudiante(id, nuevo_nombre, nuevo_apellido, nuevo_legajo):
+def actualizar_estudiante(estudiantes, id, nuevo_nombre, nuevo_apellido, nuevo_legajo):
     for estudiante in estudiantes:
         if estudiante[0] == id:
             estudiante[1] = nuevo_nombre
@@ -84,7 +84,7 @@ def actualizar_estudiante(id, nuevo_nombre, nuevo_apellido, nuevo_legajo):
     if id not in [estudiante[0] for estudiante in estudiantes]:
         print("El estudiante no existe.")
     
-def actualizar_materia(id, nueva_materia):
+def actualizar_materia(materias ,id, nueva_materia):
     for materia in materias:
         if materia[0] == id:
             materia[1] = nueva_materia
@@ -117,7 +117,7 @@ def mostrar_materias(materias, id_materia):
     else:
         print(materia)
 
-def mostrar_calificaciones(id_estudiante):
+def mostrar_calificaciones(estudiantes, materias, calificaciones ,id_estudiante):
     calificaciones_estudiante = [cal for cal in calificaciones if cal[1] == id_estudiante]
     if calificaciones_estudiante:
         for calificacion in calificaciones_estudiante:
