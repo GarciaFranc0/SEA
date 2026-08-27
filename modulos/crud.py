@@ -1,56 +1,47 @@
 def agregar_estudiante(estudiantes, id_alumno, nombre, apellido, legajo):
-    ids_existentes = [e[0] for e in estudiantes]
-    if id_alumno in ids_existentes:
-        print("El ID del estudiante ya existe. No se puede agregar.")
+    ids_existentes = list(filter(lambda e: e[0] == id_alumno, estudiantes))
+    if len(ids_existentes) > 0:
+        print("El ID del estudiante ya existe. No se puede agregar")
     else:
         estudiantes.append([id_alumno, nombre, apellido, legajo])
         print("Estudiante registrado con éxito.")
 
 def agregar_materia(materias, id_materia, nombre_materia):
-    ids_existentes = [m[0] for m in materias]
-    if id_materia in ids_existentes:
+    ids_existentes = list(filter(lambda m: m[0] == id_materia, materias))
+    
+    if len(ids_existentes) > 0:
         print("El ID de la materia ya existe. No se puede agregar.")
     else:
         materias.append([id_materia, nombre_materia])
         print("Materia registrada con éxito.")
 
 def agregar_calificacion(calificaciones, id_materia, id_estudiante, nota):
-    existe = False
-    for cal in calificaciones:
-        if cal[0] == id_materia and cal[1] == id_estudiante:
-            existe = True
-    if existe:
-            print("La calificación ya existe. No se puede agregar.")
+    ids_existentes = list(filter(lambda c: c[0] == id_materia and c[1] == id_estudiante, calificaciones))
+    if len(ids_existentes) > 0:
+        print("La calificación ya existe. No se puede agregar.")
     else:
         calificaciones.append([id_materia, id_estudiante, nota])
         print("Calificación registrada con éxito.")
 
 def buscar_estudiante(estudiantes, id_alumno):
-    resultado = None
-    for estudiante in estudiantes:
-        if estudiante[0] == id_alumno:
-            resultado = estudiante       
-    if resultado is None:
-        resultado = "El estudiante no existe."
-        
+    coincidencias = list(filter(lambda e: e[0] == id_alumno, estudiantes))
+    resultado = "El estudiante no existe"
+    if len(coincidencias) > 0:
+        resultado = coincidencias[0]
     return resultado
 
 def buscar_materia(materias, id_materia):
-    resultado = None
-    for materia in materias:
-        if materia[0] == id_materia:
-            resultado = materia            
-    if resultado == None:
-        resultado = "La materia no existe."        
+    coincidencias = list(filter(lambda m: m[0] == id_materia, materias))
+    resultado = "La materia no existe"
+    if len(coincidencias) > 0:
+        resultado = coincidencias[0]
     return resultado
 
 def buscar_calificacion(calificaciones, id_materia, id_estudiante):
-    resultado = None
-    for calificacion in calificaciones:
-        if calificacion[0] == id_materia and calificacion[1] == id_estudiante:
-            resultado = calificacion
-    if resultado == None:
-        resultado = "La calificación no existe."
+    coincidencias = list(filter(lambda c: c[0] == id_materia and c[1] == id_estudiante, calificaciones))
+    resultado = "La calificación no existe."
+    if len(coincidencias) > 0:
+        resultado = coincidencias[0]
     return resultado
 
 def eliminar_estudiante(estudiantes, id_alumno):
