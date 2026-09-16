@@ -29,28 +29,36 @@ def notas_extremas(calificaciones):
                 nota_max = calificacion[2]
             elif calificacion[2] < nota_min:
                 nota_min = calificacion[2]
-    calificaciones_extremas = [nota_min, nota_max]
+    calificaciones_extremas = (nota_min, nota_max)
     return calificaciones_extremas
 
 def porcentaje_promedio_alto(estudiantes, calificaciones):
     alumnos_calif_alta = 0
-    for est in estudiantes:
-        promedio = calcular_promedio(calificaciones, est[0])
+    for estudiante in estudiantes:
+        promedio = calcular_promedio(calificaciones, estudiante.get("id"))
         if promedio >= 8.0:
             alumnos_calif_alta += 1
     porcentaje = (alumnos_calif_alta / len(estudiantes)) * 100
     return porcentaje
 
 def estadistica_completa_estudiante(estudiantes, calificaciones, materias, id_estudiante):
-    calif_est = []
+    notas_estudiante = []
     for calificacion in calificaciones:
         if calificacion[1] == id_estudiante:
-            calif_est.append()
-    total_materias = len(calif_est)
+            notas_estudiante.append(calificacion[2])
+    total_materias = len(notas_estudiante)
     promedio = calcular_promedio(calificaciones, id_estudiante)
-    max_nota = max(calif_est)
-    min_nota = min(calif_est)
-    estadistica_completa = [total_materias, promedio, max_nota, min_nota]
+    max_nota = 0
+    min_nota = 0
+    if notas_estudiante:
+        max_nota = max(notas_estudiante)
+        min_nota = min(notas_estudiante)
+    estadistica_completa = {
+        "total": total_materias,
+        "promedio": promedio,
+        "maxima": max_nota,
+        "minima": min_nota,
+    }
     return estadistica_completa
 
 def promedio_materia(calificaciones, id_materia):
