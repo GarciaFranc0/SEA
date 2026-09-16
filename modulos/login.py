@@ -21,7 +21,12 @@ def login_estudiante(estudiantes):
     valido = False
     intentos = 0
     max_intentos = 3
-    legajos_validos = list(map(lambda e: str(e[3]), estudiantes))
+    legajos_validos = list(
+        map(
+            lambda estudiante: str(estudiante.get("legajo")),
+            estudiantes,
+        )
+    )
     while not valido and intentos < max_intentos:
         legajo = input("Ingrese su número de legajo: ").strip()
         if legajo in legajos_validos:

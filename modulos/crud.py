@@ -1,10 +1,22 @@
 def agregar_estudiante(estudiantes, id_alumno, nombre, apellido, legajo):
-    ids_existentes = list(filter(lambda e: e[0] == id_alumno, estudiantes))
-    if len(ids_existentes) > 0:
-        print("El ID del estudiante ya existe. No se puede agregar")
-    else:
-        estudiantes.append([id_alumno, nombre, apellido, legajo])
-        print("Estudiante registrado con éxito.")
+    for estudiante in estudiantes:
+        if estudiante.get("id") == id_alumno:
+            print("El ID del estudiante ya existe. No se puede agregar.")
+            return False
+
+        if estudiante.get("legajo") == legajo:
+            print("El legajo del estudiante ya existe. No se puede agregar.")
+            return False
+
+    nuevo_estudiante = {
+        "id": id_alumno,
+        "nombre": nombre,
+        "apellido": apellido,
+        "legajo": legajo,
+    }
+    estudiantes.append(nuevo_estudiante)
+    print("Estudiante registrado con éxito.")
+    return True
 
 def agregar_materia(materias, id_materia, nombre_materia):
     ids_existentes = list(filter(lambda m: m[0] == id_materia, materias))
@@ -24,11 +36,10 @@ def agregar_calificacion(calificaciones, id_materia, id_estudiante, nota):
         print("Calificación registrada con éxito.")
 
 def buscar_estudiante(estudiantes, id_alumno):
-    coincidencias = list(filter(lambda e: e[0] == id_alumno, estudiantes))
-    resultado = "El estudiante no existe"
-    if len(coincidencias) > 0:
-        resultado = coincidencias[0]
-    return resultado
+    for estudiante in estudiantes:
+        if estudiante.get("id") == id_alumno:
+            return estudiante
+    return None
 
 def buscar_materia(materias, id_materia):
     coincidencias = list(filter(lambda m: m[0] == id_materia, materias))
@@ -45,15 +56,14 @@ def buscar_calificacion(calificaciones, id_materia, id_estudiante):
     return resultado
 
 def eliminar_estudiante(estudiantes, id_alumno):
-    encontrado = False
-    for estudiante in estudiantes:
-        if estudiante[0] == id_alumno:
-            estudiantes.remove(estudiante)
-            encontrado = True     
-    if encontrado:
-        print("Estudiante eliminado correctamente.")
-    else:
+    estudiante = buscar_estudiante(estudiantes, id_alumno)
+    if estudiante is None:
         print("El estudiante no existe.")
+        return False
+
+    estudiantes.remove(estudiante)
+    print("Estudiante eliminado correctamente.")
+    return True
     
 def eliminar_materia(materias, id):
     for materia in materias:
@@ -74,15 +84,26 @@ def eliminar_calificacion(calificaciones, id_materia, id_estudiante):
     else:
         print("La calificación no existe.")
 
-def actualizar_estudiante(estudiantes, id, nuevo_nombre, nuevo_apellido, nuevo_legajo):
-    for estudiante in estudiantes:
-        if estudiante[0] == id:
-            estudiante[1] = nuevo_nombre
-            estudiante[2] = nuevo_apellido
-            estudiante[3] = nuevo_legajo
-            print("Estudiante actualizado correctamente.")
-    if id not in [estudiante[0] for estudiante in estudiantes]:
+def actualizar_estudiante(estudiantes, id_alumno, nuevo_nombre, nuevo_apellido, nuevo_legajo):
+    estudiante = buscar_estudiante(estudiantes, id_alumno)
+    if estudiante is None:
         print("El estudiante no existe.")
+        return False
+
+    for otro_estudiante in estudiantes:
+        mismo_estudiante = otro_estudiante.get("id") == id_alumno
+        mismo_legajo = otro_estudiante.get("legajo") == nuevo_legajo
+        if not mismo_estudiante and mismo_legajo:
+            print("El nuevo legajo ya pertenece a otro estudiante.")
+            return False
+
+    estudiante.update({
+        "nombre": nuevo_nombre,
+        "apellido": nuevo_apellido,
+        "legajo": nuevo_legajo,
+    })
+    print("Estudiante actualizado correctamente.")
+    return True
     
 def actualizar_materia(materias ,id, nueva_materia):
     for materia in materias:
@@ -105,10 +126,15 @@ def actualizar_calificacion(calificaciones, id_materia, id_estudiante, nueva_cal
 
 def mostrar_estudiantes(estudiantes, id_alumno):
     estudiante = buscar_estudiante(estudiantes, id_alumno)
-    if estudiante != "El estudiante no existe.":
-        print(f"ID: {estudiante[0]} | Nombre: {estudiante[1]} {estudiante[2]} | Legajo: {estudiante[3]}")
-    else:
-        print(estudiante)
+    if estudiante is None:
+        print("El estudiante no existe.")
+        return
+
+    print(
+        f"ID: {estudiante.get('id')} | "
+        f"Nombre: {estudiante.get('nombre')} {estudiante.get('apellido')} | "
+        f"Legajo: {estudiante.get('legajo')}"
+    )
 
 def mostrar_materias(materias, id_materia):
     materia = buscar_materia(materias, id_materia)
