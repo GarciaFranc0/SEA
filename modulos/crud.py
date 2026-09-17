@@ -101,6 +101,17 @@ def actualizar_estudiante(estudiantes, id_alumno, nuevo_nombre, nuevo_apellido, 
     estudiante = buscar_estudiante(estudiantes, id_alumno)
     if estudiante is None:
         print("El estudiante no existe.")
+        return False
+        
+    estudiante["nombre"] = nuevo_nombre
+    estudiante["apellido"] = nuevo_apellido
+    estudiante["legajo"] = int(nuevo_legajo)
+    print("Estudiante actualizado correctamente.")
+    return True
+
+    estudiante = buscar_estudiante(estudiantes, id_alumno)
+    if estudiante is None:
+        print("El estudiante no existe.")
     
 def actualizar_materia(materias ,id_materia, nueva_materia):
     if id_materia in materias:
@@ -139,21 +150,17 @@ def mostrar_materias(materias, id_materia):
 
 def mostrar_calificaciones(estudiantes, materias, calificaciones, id_estudiante):
     calificaciones_estudiante = [
-        calificacion for calificacion in calificaciones
-        if calificacion[0][1] == id_estudiante
+        cal for cal in calificaciones if cal[0][1] == id_estudiante
     ]
-
     if calificaciones_estudiante:
-        estudiante = next(
-            estudiante for estudiante in estudiantes
-            if estudiante[0] == id_estudiante
-        )
-
-        for calificacion in calificaciones_estudiante:
-            id_materia = calificacion[0][0]
-            nota = calificacion[1]
-            materia = materias[id_materia]
-
-            print(f"{estudiante[1]} obtuvo {nota} en {materia['nombre']}")
+        estudiante = buscar_estudiante(estudiantes, id_estudiante)
+        if estudiante:
+            print(f"\n--- Calificaciones de {estudiante['nombre']} {estudiante['apellido']} ---")
+            for cal in calificaciones_estudiante:
+                id_materia = cal[0][0]
+                nota = cal[1]
+                materia = buscar_materia(materias, id_materia)
+                nombre_m = materia['nombre'] if isinstance(materia, dict) else "Desconocida"
+                print(f"- {nombre_m}: {nota}")
     else:
         print("No hay calificaciones registradas para este estudiante.")
