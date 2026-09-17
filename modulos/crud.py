@@ -168,10 +168,23 @@ def mostrar_materias(materias, id_materia):
     else:
         print("La materia no existe.")
 
-def mostrar_calificaciones(estudiantes, materias, calificaciones ,id_estudiante):
+def mostrar_calificaciones(estudiantes, materias, calificaciones, id_estudiante):
     calificaciones_estudiante = [cal for cal in calificaciones if cal[1] == id_estudiante]
     if calificaciones_estudiante:
+        estudiante_por_id = {estudiante.get("id"): estudiante for estudiante in estudiantes}
+        materia_por_id = {materia[0]: materia for materia in materias}
+
         for calificacion in calificaciones_estudiante:
-            print(estudiantes[calificacion[1]-1][1], "obtuvo", calificacion[2], "en", materias[calificacion[0]-1][1])
+            estudiante = estudiante_por_id.get(calificacion[1])
+            materia = materia_por_id.get(calificacion[0])
+
+            if estudiante is None or materia is None:
+                print("No se pudo mostrar una calificación porque falta el estudiante o la materia.")
+                continue
+
+            print(
+                f"{estudiante.get('nombre')} {estudiante.get('apellido')} obtuvo "
+                f"{calificacion[2]} en {materia[1]}"
+            )
     else:
         print("No hay calificaciones registradas para este estudiante.")
