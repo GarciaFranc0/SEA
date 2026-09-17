@@ -85,6 +85,18 @@ def estudiantes_solo_en_materia(inscriptos_materia_a, inscriptos_materia_b):
     """Devuelve los IDs inscriptos en A pero no en B."""
     return set(inscriptos_materia_a).difference(set(inscriptos_materia_b))
 
+def pedir_entero(mensaje):
+    #solicita un número entero al usuario y valida la entrada
+    valido = False
+    numero = 0
+    while not valido:
+        entrada = input(mensaje).strip()
+        if entrada.isdigit():
+            numero = int(entrada)
+            valido = True
+        else:
+            print("Entrada inválida. Debe ingresar un número entero.")
+    return numero
 
 hay_ids_duplicados = existen_ids_duplicados
 hay_legajos_duplicados = existen_legajos_duplicados
