@@ -1,4 +1,11 @@
+from .validaciones import validar_legajo, validar_nota
+
+
 def agregar_estudiante(estudiantes, id_alumno, nombre, apellido, legajo):
+    if not validar_legajo(legajo):
+        print("El legajo debe contener solo dígitos.")
+        return False
+
     for estudiante in estudiantes:
         if estudiante.get("id") == id_alumno:
             print("El ID del estudiante ya existe. No se puede agregar.")
@@ -28,12 +35,19 @@ def agregar_materia(materias, id_materia, nombre_materia):
         print("Materia registrada con éxito.")
 
 def agregar_calificacion(calificaciones, id_materia, id_estudiante, nota):
+    if not validar_nota(nota):
+        print("La nota debe ser un número entre 0 y 10.")
+        return False
+
+    nota = float(nota)
     ids_existentes = list(filter(lambda c: c[0] == id_materia and c[1] == id_estudiante, calificaciones))
     if len(ids_existentes) > 0:
         print("La calificación ya existe. No se puede agregar.")
+        return False
     else:
         calificaciones.append([id_materia, id_estudiante, nota])
         print("Calificación registrada con éxito.")
+        return True
 
 def buscar_estudiante(estudiantes, id_alumno):
     for estudiante in estudiantes:
@@ -43,10 +57,9 @@ def buscar_estudiante(estudiantes, id_alumno):
 
 def buscar_materia(materias, id_materia):
     coincidencias = list(filter(lambda m: m[0] == id_materia, materias))
-    resultado = "La materia no existe"
     if len(coincidencias) > 0:
-        resultado = coincidencias[0]
-    return resultado
+        return coincidencias[0]
+    return None
 
 def buscar_calificacion(calificaciones, id_materia, id_estudiante):
     coincidencias = list(filter(lambda c: c[0] == id_materia and c[1] == id_estudiante, calificaciones))
@@ -70,8 +83,9 @@ def eliminar_materia(materias, id):
         if materia[0] == id:
             materias.remove(materia)
             print("Materia eliminada correctamente.")
-    if id not in materias:
-        print("La materia no existe.")
+            return True
+    print("La materia no existe.")
+    return False
 
 def eliminar_calificacion(calificaciones, id_materia, id_estudiante):
     encontrado = False
@@ -85,6 +99,10 @@ def eliminar_calificacion(calificaciones, id_materia, id_estudiante):
         print("La calificación no existe.")
 
 def actualizar_estudiante(estudiantes, id_alumno, nuevo_nombre, nuevo_apellido, nuevo_legajo):
+    if not validar_legajo(nuevo_legajo):
+        print("El legajo debe contener solo dígitos.")
+        return False
+
     estudiante = buscar_estudiante(estudiantes, id_alumno)
     if estudiante is None:
         print("El estudiante no existe.")
@@ -114,6 +132,11 @@ def actualizar_materia(materias ,id, nueva_materia):
         print("La materia no existe.")
 
 def actualizar_calificacion(calificaciones, id_materia, id_estudiante, nueva_calificacion):
+    if not validar_nota(nueva_calificacion):
+        print("La nota debe ser un número entre 0 y 10.")
+        return False
+
+    nueva_calificacion = float(nueva_calificacion)
     encontrado = False
     for calificacion in calificaciones:
         if calificacion[0] == id_materia and calificacion[1] == id_estudiante:
@@ -121,8 +144,10 @@ def actualizar_calificacion(calificaciones, id_materia, id_estudiante, nueva_cal
             encontrado = True          
     if encontrado:
         print("Calificación actualizada correctamente.")
+        return True
     else:
         print("La calificación no existe.")
+        return False
 
 def mostrar_estudiantes(estudiantes, id_alumno):
     estudiante = buscar_estudiante(estudiantes, id_alumno)
@@ -138,10 +163,10 @@ def mostrar_estudiantes(estudiantes, id_alumno):
 
 def mostrar_materias(materias, id_materia):
     materia = buscar_materia(materias, id_materia)
-    if materia != "La materia no existe.":
+    if materia is not None:
         print(f"ID: {materia[0]} | Nombre: {materia[1]}")
     else:
-        print(materia)
+        print("La materia no existe.")
 
 def mostrar_calificaciones(estudiantes, materias, calificaciones ,id_estudiante):
     calificaciones_estudiante = [cal for cal in calificaciones if cal[1] == id_estudiante]

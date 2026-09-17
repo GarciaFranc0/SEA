@@ -7,6 +7,6 @@ rol = input("Ingrese su rol (admin/estudiante): ").strip().lower()
 if rol == "admin":
     modulos.login_admin()
 elif rol == "estudiante":
-    modulos.login_estudiante()
+    modulos.login_estudiante(datos.estudiantes)
 else:
     print("Rol no válido.")

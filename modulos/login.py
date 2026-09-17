@@ -1,3 +1,6 @@
+from .validaciones import validar_legajo
+
+
 def login_admin():
     valido = False
     intentos = 0
@@ -29,7 +32,7 @@ def login_estudiante(estudiantes):
     )
     while not valido and intentos < max_intentos:
         legajo = input("Ingrese su número de legajo: ").strip()
-        if legajo in legajos_validos:
+        if validar_legajo(legajo) and legajo in legajos_validos:
             print("Inicio de sesión exitoso como Estudiante.")
             valido = True
         else:
