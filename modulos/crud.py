@@ -1,5 +1,4 @@
-from modulos.interfaz import subtitulo, exito, error, separador
-
+from .interfaz import subtitulo, exito, error, separador
 from .validaciones import validar_legajo, validar_nota
 
 
@@ -154,15 +153,20 @@ def mostrar_calificaciones(estudiantes, materias, calificaciones, id_estudiante)
     calificaciones_estudiante = [
         cal for cal in calificaciones if cal[0][1] == id_estudiante
     ]
+
     if calificaciones_estudiante:
         estudiante = buscar_estudiante(estudiantes, id_estudiante)
         if estudiante:
-            print(f"\n--- Calificaciones de {estudiante['nombre']} {estudiante['apellido']} ---")
+            subtitulo(f"Boletín de Calificaciones: {estudiante['nombre']} {estudiante['apellido']}")
+            print(f"  {'MATERIA':<25} | {'NOTA':<6} | {'ESTADO':<10}")
+            separador()
             for cal in calificaciones_estudiante:
                 id_materia = cal[0][0]
                 nota = cal[1]
                 materia = buscar_materia(materias, id_materia)
                 nombre_m = materia['nombre'] if isinstance(materia, dict) else "Desconocida"
-                print(f"- {nombre_m}: {nota}")
+                estado = "Aprobado" if nota >= 4.0 else "Reprobado"
+                print(f"  {nombre_m:<25} | {nota:<6.1f} | {estado:<10}")
+            separador()
     else:
-        print("No hay calificaciones registradas para este estudiante.")
+        error("No hay calificaciones registradas para este estudiante.")
