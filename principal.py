@@ -158,9 +158,25 @@ def ejecutar_sistema():
                             print(f"  🔺 Nota más alta: {ext[1]}")
                             modulos.separador()
                         case "5":
-                            id_e = modulos.pedir_entero("ID Estudiante: ")
-                            res = modulos.estadistica_completa_estudiante(datos.estudiantes, datos.calificaciones, datos.materias, id_e)
-                            print(f"Materias cursadas: {res['total']} | Promedio: {res['promedio']:.2f} | Máxima: {res['maxima']} | Mínima: {res['minima']}")
+                            id_e = modulos.pedir_entero("Ingrese ID del Estudiante: ")
+                            estudiante = modulos.buscar_estudiante(datos.estudiantes, id_e)
+    
+                            if estudiante is None:
+                                modulos.error(f"El estudiante con ID {id_e} no existe en el sistema.")
+                            else:
+                                res = modulos.estadistica_completa_estudiante(
+                                datos.estudiantes, datos.calificaciones, datos.materias, id_e
+                                )
+                                modulos.subtitulo(f"Resumen Académico de {estudiante['nombre']} {estudiante['apellido']}")
+        
+                                if res['total'] > 0:
+                                    print(f"  📚 Materias cursadas: {res['total']}")
+                                    print(f"  📊 Promedio General:  {res['promedio']:.2f}")
+                                    print(f"  🔺 Nota más alta:     {res['maxima']}")
+                                    print(f"  🔻 Nota más baja:     {res['minima']}")
+                                else:
+                                    modulos.alerta("El estudiante está registrado pero aún no posee calificaciones cargadas.")
+                                    modulos.separador()
                 else:
                     res = modulos.estadistica_completa_estudiante(datos.estudiantes, datos.calificaciones, datos.materias, id_estudiante_sesion)
                     print(f"\n--- TU RESUMEN ACADÉMICO ---")

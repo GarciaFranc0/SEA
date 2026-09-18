@@ -40,18 +40,23 @@ def porcentaje_promedio_alto(estudiantes, calificaciones):
         return (alumnos_calif_alta / total_estudiantes) * 100     
     return 0.0
 
+# modulos/estadisticas.py
+
 def estadistica_completa_estudiante(estudiantes, calificaciones, materias, id_estudiante):
-    notas_estudiante = [cal[1] for cal in calificaciones if cal[0][1] == id_estudiante]
+    notas_estudiante = [cal[1] for cal in calificaciones if cal[0][1] == id_estudiante] 
     total_materias = len(notas_estudiante)
-    promedio = calcular_promedio(calificaciones, id_estudiante)
-    max_nota = max(notas_estudiante) if notas_estudiante else 0
-    min_nota = min(notas_estudiante) if notas_estudiante else 0
-    
+    promedio = 0.0
+    max_nota = 0.0
+    min_nota = 0.0
+    if notas_estudiante:
+        promedio = sum(notas_estudiante) / total_materias
+        max_nota = max(notas_estudiante)
+        min_nota = min(notas_estudiante)
     return {
         "total": total_materias,
         "promedio": promedio,
         "maxima": max_nota,
-        "minima": min_nota,
+        "minima": min_nota
     }
 
 def promedio_materia(calificaciones, id_materia):

@@ -1,4 +1,4 @@
-from .interfaz import subtitulo, exito, error, separador
+from .interfaz import subtitulo, exito, error, separador, alerta
 from .validaciones import validar_legajo, validar_nota
 
 
@@ -71,28 +71,28 @@ def buscar_calificacion(calificaciones, id_materia, id_estudiante):
 def eliminar_estudiante(estudiantes, id_alumno):
     estudiante = buscar_estudiante(estudiantes, id_alumno)
     if estudiante is None:
-        print("El estudiante no existe.")
+        error("El estudiante no existe.")
         return False
 
     estudiantes.remove(estudiante)
-    print("Estudiante eliminado correctamente.")
+    exito("Estudiante eliminado correctamente.")
     return True
     
 def eliminar_materia(materias, id_materia):
     if id_materia in materias:
         del materias[id_materia]
-        print("Materia eliminada correctamente.")
+        exito("Materia eliminada correctamente.")
     else:
-        print("La materia no existe.")
+        error("La materia no existe.")
 
 def eliminar_calificacion(calificaciones, id_materia, id_estudiante):
     clave = (id_materia, id_estudiante)
     for fila in calificaciones:
         if fila[0] == clave:
             calificaciones.remove(fila)
-            print("Calificación eliminada correctamente.")
+            exito("Calificación eliminada correctamente.")
             return
-    print("La calificación no existe.")
+    error("La calificación no existe.")
 
 def actualizar_estudiante(estudiantes, id_alumno, nuevo_nombre, nuevo_apellido, nuevo_legajo):
     if not validar_legajo(nuevo_legajo):
@@ -101,13 +101,13 @@ def actualizar_estudiante(estudiantes, id_alumno, nuevo_nombre, nuevo_apellido, 
 
     estudiante = buscar_estudiante(estudiantes, id_alumno)
     if estudiante is None:
-        print("El estudiante no existe.")
+        error("El estudiante no existe.")
         return False
         
     estudiante["nombre"] = nuevo_nombre
     estudiante["apellido"] = nuevo_apellido
     estudiante["legajo"] = int(nuevo_legajo)
-    print("Estudiante actualizado correctamente.")
+    exito("Estudiante actualizado correctamente.")
     return True
     estudiante = buscar_estudiante(estudiantes, id_alumno)
     if estudiante is None:
@@ -118,7 +118,7 @@ def actualizar_materia(materias ,id_materia, nueva_materia):
         materias[id_materia]["nombre"] = nueva_materia
         print("Materia actualizada correctamente.")
     else:
-        print("La materia no existe.")
+        error("La materia no existe.")
 
 def actualizar_calificacion(calificaciones, id_materia, id_estudiante, nueva_calificacion):
     clave = (id_materia, id_estudiante)
@@ -127,7 +127,7 @@ def actualizar_calificacion(calificaciones, id_materia, id_estudiante, nueva_cal
             fila[1] = nueva_calificacion
             print("Calificación actualizada correctamente.")
             return
-    print("La calificación no existe.")
+    error("La calificación no existe.")
 
 def mostrar_estudiantes(estudiantes, id_alumno):
     estudiante = buscar_estudiante(estudiantes, id_alumno)
@@ -147,26 +147,25 @@ def mostrar_materias(materias, id_materia):
     if materia != "La materia no existe.":
         print(f"ID: {id_materia} | Nombre: {materia['nombre']}")
     else:
-        print("La materia no existe.")
+        error("La materia no existe.")
 
 def mostrar_calificaciones(estudiantes, materias, calificaciones, id_estudiante):
-    calificaciones_estudiante = [
-        cal for cal in calificaciones if cal[0][1] == id_estudiante
-    ]
-
+    estudiante = buscar_estudiante(estudiantes, id_estudiante)
+    if estudiante is None:
+        error(f"El estudiante con ID {id_estudiante} no existe en el sistema.")
+        return
+    calificaciones_estudiante = [cal for cal in calificaciones if cal[0][1] == id_estudiante]
     if calificaciones_estudiante:
-        estudiante = buscar_estudiante(estudiantes, id_estudiante)
-        if estudiante:
-            subtitulo(f"Boletín de Calificaciones: {estudiante['nombre']} {estudiante['apellido']}")
-            print(f"  {'MATERIA':<25} | {'NOTA':<6} | {'ESTADO':<10}")
-            separador()
-            for cal in calificaciones_estudiante:
-                id_materia = cal[0][0]
-                nota = cal[1]
-                materia = buscar_materia(materias, id_materia)
-                nombre_m = materia['nombre'] if isinstance(materia, dict) else "Desconocida"
-                estado = "Aprobado" if nota >= 4.0 else "Reprobado"
-                print(f"  {nombre_m:<25} | {nota:<6.1f} | {estado:<10}")
-            separador()
+        subtitulo(f"Boletín de Calificaciones: {estudiante['nombre']} {estudiante['apellido']}")
+        print(f"  {'MATERIA':<25} | {'NOTA':<6} | {'ESTADO':<10}")
+        separador()
+        for cal in calificaciones_estudiante:
+            id_materia = cal[0][0]
+            nota = cal[1]
+            materia = buscar_materia(materias, id_materia)
+            nombre_m = materia['nombre'] if isinstance(materia, dict) else "Desconocida"
+            estado = "Aprobado" if nota >= 4.0 else "Reprobado"
+            print(f"  {nombre_m:<25} | {nota:<6.1f} | {estado:<10}")
+        separador()
     else:
-        error("No hay calificaciones registradas para este estudiante.")
+        alerta(f"El estudiante {estudiante['nombre']} {estudiante['apellido']} no tiene calificaciones registradas.")
