@@ -4,16 +4,16 @@ from .validaciones import validar_legajo, validar_nota
 
 def agregar_estudiante(estudiantes, id_alumno, nombre, apellido, legajo):
     if not validar_legajo(legajo):
-        print("El legajo debe contener solo dígitos.")
+        alerta("El legajo debe contener solo dígitos.")
         return False
 
     for estudiante in estudiantes:
         if estudiante.get("id") == id_alumno:
-            print("El ID del estudiante ya existe. No se puede agregar.")
+            error("El ID del estudiante ya existe. No se puede agregar.")
             return False
 
         if estudiante.get("legajo") == legajo:
-            print("El legajo del estudiante ya existe. No se puede agregar.")
+            error("El legajo del estudiante ya existe. No se puede agregar.")
             return False
 
     nuevo_estudiante = {
@@ -23,29 +23,29 @@ def agregar_estudiante(estudiantes, id_alumno, nombre, apellido, legajo):
         "legajo": legajo,
     }
     estudiantes.append(nuevo_estudiante)
-    print("Estudiante registrado con éxito.")
+    exito("Estudiante registrado con éxito.")
     return True
 
 def agregar_materia(materias, id_materia, nombre_materia):
     if id_materia in materias:
-        print("El ID de la materia ya existe. No se puede agregar.")
+        error("El ID de la materia ya existe. No se puede agregar.")
     else:
         materias[id_materia] = {'nombre': nombre_materia}
-        print("Materia registrada con éxito.")
+        exito("Materia registrada con éxito.")
 
 def agregar_calificacion(calificaciones, id_materia, id_estudiante, nota):
     if nota < 0 or nota > 10:
-        print("La nota debe estar entre 0 y 10. No se puede agregar.")
+        alerta("La nota debe estar entre 0 y 10. No se puede agregar.")
         return
     clave = (id_materia, id_estudiante)
 
     for fila in calificaciones: 
         if fila[0] == clave:
-            print("La calificación ya existe. No se puede agregar.")
+            error("La calificación ya existe. No se puede agregar.")
             return
    
     calificaciones.append([clave, nota])
-    print("Calificación registrada con éxito.")
+    exito("Calificación registrada con éxito.")
 
 def buscar_estudiante(estudiantes, id_alumno):
     for estudiante in estudiantes:
@@ -96,27 +96,23 @@ def eliminar_calificacion(calificaciones, id_materia, id_estudiante):
 
 def actualizar_estudiante(estudiantes, id_alumno, nuevo_nombre, nuevo_apellido, nuevo_legajo):
     if not validar_legajo(nuevo_legajo):
-        print("El legajo debe contener solo dígitos.")
+        alerta("El legajo debe contener solo dígitos.")
         return False
-
     estudiante = buscar_estudiante(estudiantes, id_alumno)
     if estudiante is None:
         error("El estudiante no existe.")
-        return False
-        
+        return False   
     estudiante["nombre"] = nuevo_nombre
     estudiante["apellido"] = nuevo_apellido
     estudiante["legajo"] = int(nuevo_legajo)
     exito("Estudiante actualizado correctamente.")
     return True
-    estudiante = buscar_estudiante(estudiantes, id_alumno)
-    if estudiante is None:
-        print("El estudiante no existe.")
+    
 
 def actualizar_materia(materias ,id_materia, nueva_materia):
     if id_materia in materias:
         materias[id_materia]["nombre"] = nueva_materia
-        print("Materia actualizada correctamente.")
+        exito("Materia actualizada correctamente.")
     else:
         error("La materia no existe.")
 
@@ -125,7 +121,7 @@ def actualizar_calificacion(calificaciones, id_materia, id_estudiante, nueva_cal
     for fila in calificaciones:
         if fila[0] == clave:
             fila[1] = nueva_calificacion
-            print("Calificación actualizada correctamente.")
+            exito("Calificación actualizada correctamente.")
             return
     error("La calificación no existe.")
 
