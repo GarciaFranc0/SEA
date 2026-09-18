@@ -1,13 +1,11 @@
 from functools import reduce
 
 def calcular_promedio(calificaciones, id_estudiante):
-    calificaciones_estudiante = list(filter(lambda c: c[0][1] == id_estudiante, calificaciones))
-    notas = list(map(lambda c: c[1], calificaciones_estudiante))
-    promedio = 0.0
-    if notas:
-        suma_total = reduce(lambda x, y: x + y, notas)
-        promedio = suma_total / len(notas)
-    return promedio
+    calificaciones_estudiante = [cal for cal in calificaciones if cal[0][1] == id_estudiante]
+    if calificaciones_estudiante:
+        notas = [cal[1] for cal in calificaciones_estudiante]
+        return sum(notas) / len(notas)
+    return 0.0
 
 def porcentaje_aprobados(calificaciones, id_materia):
     calificaciones_materia = list(filter(lambda c: c[0][0] == id_materia, calificaciones))
@@ -32,12 +30,14 @@ def notas_extremas(calificaciones):
 
 def porcentaje_promedio_alto(estudiantes, calificaciones):
     alumnos_calif_alta = 0
-    if estudiantes:
+    total_estudiantes = len(estudiantes)
+    if total_estudiantes > 0:
         for estudiante in estudiantes:
-            promedio = calcular_promedio(calificaciones, estudiante.get("id"))
+            id_est = estudiante.get("id")
+            promedio = calcular_promedio(calificaciones, id_est)    
             if promedio >= 8.0:
-                alumnos_calif_alta += 1
-        return (alumnos_calif_alta / len(estudiantes)) * 100
+                alumnos_calif_alta += 1         
+        return (alumnos_calif_alta / total_estudiantes) * 100     
     return 0.0
 
 def estadistica_completa_estudiante(estudiantes, calificaciones, materias, id_estudiante):

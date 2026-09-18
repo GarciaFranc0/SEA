@@ -143,6 +143,11 @@ def ejecutar_sistema():
                             id_m = modulos.pedir_entero("ID Materia: ")
                             prom = modulos.promedio_materia(datos.calificaciones, id_m)
                             modulos.subtitulo(f"Promedio de la materia ID {id_m}: {prom:.2f}")
+                        # Dentro del match sub_e (Estadísticas Admin):
+                        case "2":
+                            id_m = modulos.pedir_entero("Ingrese ID de la Materia: ")
+                            porc = modulos.porcentaje_aprobados(datos.calificaciones, id_m)
+                            modulos.subtitulo(f"Porcentaje de Aprobados en la Materia (ID {id_m}): {porc:.1f}%")
                         case "3":
                             porc_a = modulos.porcentaje_promedio_alto(datos.estudiantes, datos.calificaciones)
                             modulos.subtitulo(f"Alumnos con promedio alto (>= 8.0): {porc_a:.1f}%")
