@@ -1,3 +1,5 @@
+from modulos.interfaz import subtitulo, exito, error, separador
+
 from .validaciones import validar_legajo, validar_nota
 
 
@@ -108,11 +110,10 @@ def actualizar_estudiante(estudiantes, id_alumno, nuevo_nombre, nuevo_apellido, 
     estudiante["legajo"] = int(nuevo_legajo)
     print("Estudiante actualizado correctamente.")
     return True
-
     estudiante = buscar_estudiante(estudiantes, id_alumno)
     if estudiante is None:
         print("El estudiante no existe.")
-    
+
 def actualizar_materia(materias ,id_materia, nueva_materia):
     if id_materia in materias:
         materias[id_materia]["nombre"] = nueva_materia
@@ -132,14 +133,15 @@ def actualizar_calificacion(calificaciones, id_materia, id_estudiante, nueva_cal
 def mostrar_estudiantes(estudiantes, id_alumno):
     estudiante = buscar_estudiante(estudiantes, id_alumno)
     if estudiante is None:
-        print("El estudiante no existe.")
+        error("El estudiante solicitado no existe.")
         return
 
-    print(
-        f"ID: {estudiante.get('id')} | "
-        f"Nombre: {estudiante.get('nombre')} {estudiante.get('apellido')} | "
-        f"Legajo: {estudiante.get('legajo')}"
-    )
+    subtitulo("Información del Estudiante")
+    print(f"  {'ID':<6} | {'NOMBRE Y APELLIDO':<25} | {'LEGAJO':<10}")
+    separador()
+    nombre_completo = f"{estudiante.get('nombre')} {estudiante.get('apellido')}"
+    print(f"  {estudiante.get('id'):<6} | {nombre_completo:<25} | {estudiante.get('legajo'):<10}")
+    separador()
 
 def mostrar_materias(materias, id_materia):
     materia = buscar_materia(materias, id_materia)
