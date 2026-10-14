@@ -8,20 +8,15 @@ def agregar_estudiante(estudiantes, id_alumno, nombre, apellido, legajo):
         return False
 
     for estudiante in estudiantes:
-        if estudiante.get("id") == id_alumno:
+        if estudiante[0] == id_alumno:
             error("El ID del estudiante ya existe. No se puede agregar.")
             return False
 
-        if estudiante.get("legajo") == legajo:
+        if estudiante[3] == legajo:
             error("El legajo del estudiante ya existe. No se puede agregar.")
             return False
 
-    nuevo_estudiante = {
-        "id": id_alumno,
-        "nombre": nombre,
-        "apellido": apellido,
-        "legajo": legajo,
-    }
+    nuevo_estudiante = [id_alumno, nombre, apellido, legajo]
     estudiantes.append(nuevo_estudiante)
     exito("Estudiante registrado con éxito.")
     return True
@@ -49,7 +44,7 @@ def agregar_calificacion(calificaciones, id_materia, id_estudiante, nota):
 
 def buscar_estudiante(estudiantes, id_alumno):
     for estudiante in estudiantes:
-        if estudiante.get("id") == id_alumno:
+        if estudiante[0] == id_alumno:
             return estudiante
     return None
 
@@ -101,10 +96,10 @@ def actualizar_estudiante(estudiantes, id_alumno, nuevo_nombre, nuevo_apellido, 
     estudiante = buscar_estudiante(estudiantes, id_alumno)
     if estudiante is None:
         error("El estudiante no existe.")
-        return False   
-    estudiante["nombre"] = nuevo_nombre
-    estudiante["apellido"] = nuevo_apellido
-    estudiante["legajo"] = int(nuevo_legajo)
+        return False
+    estudiante[1] = nuevo_nombre
+    estudiante[2] = nuevo_apellido
+    estudiante[3] = int(nuevo_legajo)
     exito("Estudiante actualizado correctamente.")
     return True
     
@@ -134,8 +129,8 @@ def mostrar_estudiantes(estudiantes, id_alumno):
     subtitulo("Información del Estudiante")
     print(f"  {'ID':<6} | {'NOMBRE Y APELLIDO':<25} | {'LEGAJO':<10}")
     separador()
-    nombre_completo = f"{estudiante.get('nombre')} {estudiante.get('apellido')}"
-    print(f"  {estudiante.get('id'):<6} | {nombre_completo:<25} | {estudiante.get('legajo'):<10}")
+    nombre_completo = f"{estudiante[1]} {estudiante[2]}"
+    print(f"  {estudiante[0]:<6} | {nombre_completo:<25} | {estudiante[3]:<10}")
     separador()
 
 def mostrar_materias(materias, id_materia):
@@ -152,7 +147,7 @@ def mostrar_calificaciones(estudiantes, materias, calificaciones, id_estudiante)
         return
     calificaciones_estudiante = [cal for cal in calificaciones if cal[0][1] == id_estudiante]
     if calificaciones_estudiante:
-        subtitulo(f"Boletín de Calificaciones: {estudiante['nombre']} {estudiante['apellido']}")
+        subtitulo(f"Boletín de Calificaciones: {estudiante[1]} {estudiante[2]}")
         print(f"  {'MATERIA':<25} | {'NOTA':<6} | {'ESTADO':<10}")
         separador()
         for cal in calificaciones_estudiante:
@@ -164,4 +159,4 @@ def mostrar_calificaciones(estudiantes, materias, calificaciones, id_estudiante)
             print(f"  {nombre_m:<25} | {nota:<6.1f} | {estado:<10}")
         separador()
     else:
-        alerta(f"El estudiante {estudiante['nombre']} {estudiante['apellido']} no tiene calificaciones registradas.")
+        alerta(f"El estudiante {estudiante[1]} {estudiante[2]} no tiene calificaciones registradas.")

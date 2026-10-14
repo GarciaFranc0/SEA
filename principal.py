@@ -167,8 +167,8 @@ def ejecutar_sistema():
                                 res = modulos.estadistica_completa_estudiante(
                                 datos.estudiantes, datos.calificaciones, datos.materias, id_e
                                 )
-                                modulos.subtitulo(f"Resumen Académico de {estudiante['nombre']} {estudiante['apellido']}")
-        
+                                modulos.subtitulo(f"Resumen Académico de {estudiante[1]} {estudiante[2]}")
+
                                 if res['total'] > 0:
                                     print(f"  📚 Materias cursadas: {res['total']}")
                                     print(f"  📊 Promedio General:  {res['promedio']:.2f}")

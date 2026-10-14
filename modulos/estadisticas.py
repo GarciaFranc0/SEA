@@ -33,8 +33,8 @@ def porcentaje_promedio_alto(estudiantes, calificaciones):
     total_estudiantes = len(estudiantes)
     if total_estudiantes > 0:
         for estudiante in estudiantes:
-            id_est = estudiante.get("id")
-            promedio = calcular_promedio(calificaciones, id_est)    
+            id_est = estudiante[0]
+            promedio = calcular_promedio(calificaciones, id_est)
             if promedio >= 8.0:
                 alumnos_calif_alta += 1         
         return (alumnos_calif_alta / total_estudiantes) * 100     

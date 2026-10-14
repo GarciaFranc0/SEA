@@ -35,11 +35,11 @@ def login_estudiante(estudiantes):
             i = 0
             encontrado = False
             while i < len(estudiantes) and not encontrado:
-                if estudiantes[i].get("legajo") == legajo_num:
+                if estudiantes[i][3] == legajo_num:
                     valido = True
                     encontrado = True
-                    id_estudiante_logueado = estudiantes[i].get("id")
-                    print(f"Inicio de sesión exitoso. ¡Bienvenido {estudiantes[i].get('nombre')}!")
+                    id_estudiante_logueado = estudiantes[i][0]
+                    print(f"Inicio de sesión exitoso. ¡Bienvenido {estudiantes[i][1]}!")
                 i += 1
         
         if not valido:
