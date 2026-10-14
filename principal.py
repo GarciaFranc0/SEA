@@ -92,8 +92,8 @@ def ejecutar_sistema():
                 else:
                     if sub_op == "1":
                         print("\n--- MATERIAS DISPONIBLES ---")
-                        for id_m, m in datos.materias.items():
-                            print(f"ID: {id_m} | Nombre: {m['nombre']}")
+                        for id_m, nombre_materia in datos.materias:
+                            print(f"ID: {id_m} | Nombre: {nombre_materia}")
 
             case "3":
                 modulos.sub_menu_calificaciones(rol_usuario)

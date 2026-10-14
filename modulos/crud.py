@@ -22,10 +22,10 @@ def agregar_estudiante(estudiantes, id_alumno, nombre, apellido, legajo):
     return True
 
 def agregar_materia(materias, id_materia, nombre_materia):
-    if id_materia in materias:
+    if id_materia in [materia[0] for materia in materias]:
         error("El ID de la materia ya existe. No se puede agregar.")
     else:
-        materias[id_materia] = {'nombre': nombre_materia}
+        materias.append([id_materia, nombre_materia])
         exito("Materia registrada con éxito.")
 
 def agregar_calificacion(calificaciones, id_materia, id_estudiante, nota):
@@ -49,9 +49,10 @@ def buscar_estudiante(estudiantes, id_alumno):
     return None
 
 def buscar_materia(materias, id_materia):
-    materia = materias.get(id_materia)
-    if materia:
-        resultado = materia
+    for materia in materias:
+        if materia[0] == id_materia:
+            resultado = materia
+            return resultado
     else:
         resultado = "La materia no existe"
     return resultado
@@ -74,8 +75,9 @@ def eliminar_estudiante(estudiantes, id_alumno):
     return True
     
 def eliminar_materia(materias, id_materia):
-    if id_materia in materias:
-        del materias[id_materia]
+    materia = buscar_materia(materias, id_materia)
+    if materia != "La materia no existe":
+        materias.remove(materia)
         exito("Materia eliminada correctamente.")
     else:
         error("La materia no existe.")
@@ -105,8 +107,9 @@ def actualizar_estudiante(estudiantes, id_alumno, nuevo_nombre, nuevo_apellido, 
     
 
 def actualizar_materia(materias ,id_materia, nueva_materia):
-    if id_materia in materias:
-        materias[id_materia]["nombre"] = nueva_materia
+    materia = buscar_materia(materias, id_materia)
+    if materia != "La materia no existe":
+        materia[1] = nueva_materia
         exito("Materia actualizada correctamente.")
     else:
         error("La materia no existe.")
@@ -135,10 +138,11 @@ def mostrar_estudiantes(estudiantes, id_alumno):
 
 def mostrar_materias(materias, id_materia):
     materia = buscar_materia(materias, id_materia)
-    if materia != "La materia no existe.":
-        print(f"ID: {id_materia} | Nombre: {materia['nombre']}")
-    else:
-        error("La materia no existe.")
+    if materia == "La materia no existe":
+        error("La materia no existe")
+        return
+
+    print(f"ID: {id_materia} | Nombre: {materia[1]}")
 
 def mostrar_calificaciones(estudiantes, materias, calificaciones, id_estudiante):
     estudiante = buscar_estudiante(estudiantes, id_estudiante)
@@ -154,7 +158,7 @@ def mostrar_calificaciones(estudiantes, materias, calificaciones, id_estudiante)
             id_materia = cal[0][0]
             nota = cal[1]
             materia = buscar_materia(materias, id_materia)
-            nombre_m = materia['nombre'] if isinstance(materia, dict) else "Desconocida"
+            nombre_m = materia[1] if isinstance(materia, list) else "Desconocida"
             estado = "Aprobado" if nota >= 4.0 else "Reprobado"
             print(f"  {nombre_m:<25} | {nota:<6.1f} | {estado:<10}")
         separador()
