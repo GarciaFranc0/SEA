@@ -58,7 +58,7 @@ def ejecutar_sistema():
                             modulos.mostrar_estudiantes(datos.estudiantes, id_a)
                         case "3":
                             id_a = modulos.pedir_entero("ID a eliminar: ")
-                            modulos.eliminar_estudiante(datos.estudiantes, id_a)
+                            modulos.eliminar_estudiante(datos.estudiantes, datos.calificaciones, id_a)
                         case "4":
                             id_a = modulos.pedir_entero("ID a actualizar: ")
                             nom = input("Nuevo Nombre: ").strip()
@@ -84,7 +84,7 @@ def ejecutar_sistema():
                             modulos.mostrar_materias(datos.materias, id_m)
                         case "3":
                             id_m = modulos.pedir_entero("ID a eliminar: ")
-                            modulos.eliminar_materia(datos.materias, id_m)
+                            modulos.eliminar_materia(datos.materias, datos.calificaciones, id_m)
                         case "4":
                             id_m = modulos.pedir_entero("ID a actualizar: ")
                             nom_m = input("Nuevo Nombre Materia: ").strip()

@@ -64,20 +64,24 @@ def buscar_calificacion(calificaciones, id_materia, id_estudiante):
             return fila
     return "La calificación no existe."
 
-def eliminar_estudiante(estudiantes, id_alumno):
+def eliminar_estudiante(estudiantes, calificaciones, id_alumno):
     estudiante = buscar_estudiante(estudiantes, id_alumno)
     if estudiante is None:
         error("El estudiante no existe.")
         return False
 
     estudiantes.remove(estudiante)
+    calificaciones_restantes = list(filter(lambda calificacion: calificacion[0][1] != id_alumno, calificaciones))
+    calificaciones[:] = calificaciones_restantes
     exito("Estudiante eliminado correctamente.")
     return True
     
-def eliminar_materia(materias, id_materia):
+def eliminar_materia(materias, calificaciones, id_materia):
     materia = buscar_materia(materias, id_materia)
     if materia != "La materia no existe":
         materias.remove(materia)
+        calificaciones_restantes = list(filter(lambda calificacion: calificacion[0][0] != id_materia, calificaciones))
+        calificaciones[:] = calificaciones_restantes
         exito("Materia eliminada correctamente.")
     else:
         error("La materia no existe.")
