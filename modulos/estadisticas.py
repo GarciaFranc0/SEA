@@ -1,10 +1,11 @@
 from functools import reduce
 
 def calcular_promedio(calificaciones, id_estudiante):
-    calificaciones_estudiante = [cal for cal in calificaciones if cal[0][1] == id_estudiante]
+    calificaciones_estudiante = list(filter(lambda c: c[0][1] == id_estudiante, calificaciones))
     if calificaciones_estudiante:
-        notas = [cal[1] for cal in calificaciones_estudiante]
-        return sum(notas) / len(notas)
+        notas = list(map(lambda c: c[1], calificaciones_estudiante))
+        suma = reduce(lambda acumulado, nota: acumulado + nota, notas, 0)
+        return suma / len(notas)
     return 0.0
 
 def porcentaje_aprobados(calificaciones, id_materia):
@@ -60,5 +61,9 @@ def estadistica_completa_estudiante(estudiantes, calificaciones, materias, id_es
     }
 
 def promedio_materia(calificaciones, id_materia):
-    notas_materia = [cal[1] for cal in calificaciones if cal[0][0] == id_materia]
-    return sum(notas_materia) / len(notas_materia) if notas_materia else 0.0
+    calificaciones_materia = list(filter(lambda c: c[0][0] == id_materia, calificaciones))
+    if calificaciones_materia:
+        notas = list(map(lambda c: c[1], calificaciones_materia))
+        suma_total = reduce(lambda acumulado, nota: acumulado + nota, notas, 0)
+        return suma_total / len(notas)
+    return 0.0
