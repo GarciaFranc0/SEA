@@ -67,3 +67,15 @@ def promedio_materia(calificaciones, id_materia):
         suma_total = reduce(lambda acumulado, nota: acumulado + nota, notas, 0)
         return suma_total / len(notas)
     return 0.0
+
+def estudiantes_comunes_materias(calificaciones, id_materia1, id_materia2):
+    estudiantes_materia1 = set(map(lambda cal: cal[0][1], filter(lambda cal: cal[0][0] == id_materia1, calificaciones)))
+    estudiantes_materia2 = set(map(lambda cal: cal[0][1], filter(lambda cal: cal[0][0] == id_materia2, calificaciones)))
+    comunes = estudiantes_materia1 & estudiantes_materia2
+    return comunes
+
+def estudiantes_sin_calificacion(estudiantes, calificaciones):
+    id_estudiantes = set(map(lambda est: est[0], estudiantes))
+    estudiantes_con_notas = set(map(lambda cal: cal[0][1], calificaciones))
+    sin_calificacion = id_estudiantes - estudiantes_con_notas
+    return sin_calificacion

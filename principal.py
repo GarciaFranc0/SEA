@@ -1,6 +1,6 @@
 import datos
 import modulos
-
+from modulos.estadisticas import estudiantes_comunes_materias, estudiantes_sin_calificacion
 def ejecutar_sistema():
     print("==================================================")
     print(" BIENVENIDO AL SISTEMA DE GESTIÓN ACADÉMICA ")
@@ -136,6 +136,8 @@ def ejecutar_sistema():
                     print("  [3] ⭐ Porcentaje de alumnos destacados (>=8.0)")
                     print("  [4] ↕️  Notas extremas del sistema")
                     print("  [5] 👤 Resumen académico completo por alumno")
+                    print("  [6] 🔗 Estudiantes en común entre dos materias")
+                    print("  [7] 🚫 Estudiantes sin calificaciones")
                     sub_e = input("\nSeleccione reporte: ").strip()
                     
                     match sub_e:
@@ -177,6 +179,23 @@ def ejecutar_sistema():
                                 else:
                                     modulos.alerta("El estudiante está registrado pero aún no posee calificaciones cargadas.")
                                     modulos.separador()
+                        case "6":
+                            id_m1 = modulos.pedir_entero("Ingrese ID de la primera Materia: ")
+                            id_m2 = modulos.pedir_entero("Ingrese ID de la segunda Materia: ")
+                            comunes = estudiantes_comunes_materias(datos.calificaciones, id_m1, id_m2)
+                            modulos.subtitulo(f"Estudiantes en común entre materia {id_m1} y materia {id_m2}")
+                            if comunes:
+                                print(f"  Total de estudiantes en común: {len(comunes)}")
+                                print(f"  IDs de estudiantes: {sorted(comunes)}")
+                            else:
+                                print("  No hay estudiantes en común entre estas materias.")
+                        case "7":
+                            sin_notas = estudiantes_sin_calificacion(datos.estudiantes, datos.calificaciones)
+                            modulos.subtitulo(f"Estudiantes sin calificaciones registradas")
+                            if sin_notas:
+                                print(f"  IDs de estudiantes: {sorted(sin_notas)}")
+                            else:
+                                print("  Todos los estudiantes tienen calificaciones registradas.")
                 else:
                     res = modulos.estadistica_completa_estudiante(datos.estudiantes, datos.calificaciones, datos.materias, id_estudiante_sesion)
                     print(f"\n--- TU RESUMEN ACADÉMICO ---")
