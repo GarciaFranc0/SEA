@@ -5,7 +5,10 @@ def ejecutar_sistema():
     print("==================================================")
     print(" BIENVENIDO AL SISTEMA DE GESTIÓN ACADÉMICA ")
     print("==================================================")
-    
+
+    # 0. CARGA DE DATOS DESDE ARCHIVOS
+    modulos.cargar_datos(datos.estudiantes, datos.materias, datos.calificaciones)
+
     # 1. AUTENTICACIÓN
     rol_usuario = ""
     id_estudiante_sesion = None
@@ -49,8 +52,8 @@ def ejecutar_sistema():
                     match sub_op:
                         case "1":
                             id_a = modulos.pedir_entero("ID Estudiante: ")
-                            nom = input("Nombre: ").strip()
-                            ape = input("Apellido: ").strip()
+                            nom = modulos.pedir_texto("Nombre: ")
+                            ape = modulos.pedir_texto("Apellido: ")
                             leg = modulos.pedir_entero("Legajo: ")
                             modulos.agregar_estudiante(datos.estudiantes, id_a, nom, ape, leg)
                         case "2":
@@ -61,10 +64,11 @@ def ejecutar_sistema():
                             modulos.eliminar_estudiante(datos.estudiantes, datos.calificaciones, id_a)
                         case "4":
                             id_a = modulos.pedir_entero("ID a actualizar: ")
-                            nom = input("Nuevo Nombre: ").strip()
-                            ape = input("Nuevo Apellido: ").strip()
+                            nom = modulos.pedir_texto("Nuevo Nombre: ")
+                            ape = modulos.pedir_texto("Nuevo Apellido: ")
                             leg = modulos.pedir_entero("Nuevo Legajo: ")
                             modulos.actualizar_estudiante(datos.estudiantes, id_a, nom, ape, leg)
+                    modulos.guardar_datos(datos.estudiantes, datos.materias, datos.calificaciones)
                 else:
                     if sub_op == "1":
                         modulos.mostrar_estudiantes(datos.estudiantes, id_estudiante_sesion)
@@ -77,7 +81,7 @@ def ejecutar_sistema():
                     match sub_op:
                         case "1":
                             id_m = modulos.pedir_entero("ID Materia: ")
-                            nom_m = input("Nombre de la Materia: ").strip()
+                            nom_m = modulos.pedir_texto("Nombre de la Materia: ")
                             modulos.agregar_materia(datos.materias, id_m, nom_m)
                         case "2":
                             id_m = modulos.pedir_entero("ID a consultar: ")
@@ -87,8 +91,9 @@ def ejecutar_sistema():
                             modulos.eliminar_materia(datos.materias, datos.calificaciones, id_m)
                         case "4":
                             id_m = modulos.pedir_entero("ID a actualizar: ")
-                            nom_m = input("Nuevo Nombre Materia: ").strip()
+                            nom_m = modulos.pedir_texto("Nuevo Nombre Materia: ")
                             modulos.actualizar_materia(datos.materias, id_m, nom_m)
+                    modulos.guardar_datos(datos.estudiantes, datos.materias, datos.calificaciones)
                 else:
                     if sub_op == "1":
                         print("\n--- MATERIAS DISPONIBLES ---")
@@ -104,19 +109,13 @@ def ejecutar_sistema():
                         case "1":
                             id_m = modulos.pedir_entero("ID Materia: ")
                             id_e = modulos.pedir_entero("ID Estudiante: ")
-                            nota_input = input("Nota (0-10): ").strip()
-                            if modulos.validar_nota(nota_input):
-                                modulos.agregar_calificacion(datos.calificaciones, id_m, id_e, float(nota_input))
-                            else:
-                                print("Nota inválida.")
+                            nota = modulos.pedir_nota("Nota (0-10): ")
+                            modulos.agregar_calificacion(datos.calificaciones, id_m, id_e, nota)
                         case "2":
                             id_m = modulos.pedir_entero("ID Materia: ")
                             id_e = modulos.pedir_entero("ID Estudiante: ")
-                            nota_input = input("Nueva Nota (0-10): ").strip()
-                            if modulos.validar_nota(nota_input):
-                                modulos.actualizar_calificacion(datos.calificaciones, id_m, id_e, float(nota_input))
-                            else:
-                                print("Nota inválida.")
+                            nota = modulos.pedir_nota("Nueva Nota (0-10): ")
+                            modulos.actualizar_calificacion(datos.calificaciones, id_m, id_e, nota)
                         case "3":
                             id_m = modulos.pedir_entero("ID Materia: ")
                             id_e = modulos.pedir_entero("ID Estudiante: ")
@@ -124,6 +123,7 @@ def ejecutar_sistema():
                         case "4":
                             id_e = modulos.pedir_entero("ID Estudiante: ")
                             modulos.mostrar_calificaciones(datos.estudiantes, datos.materias, datos.calificaciones, id_e)
+                    modulos.guardar_datos(datos.estudiantes, datos.materias, datos.calificaciones)
                 else:
                     if sub_op == "1":
                         modulos.mostrar_calificaciones(datos.estudiantes, datos.materias, datos.calificaciones, id_estudiante_sesion)
@@ -211,4 +211,7 @@ def ejecutar_sistema():
                 print("Opción no válida. Por favor, intente nuevamente.")
 
 if __name__ == "__main__":
-    ejecutar_sistema()
+    try:
+        ejecutar_sistema()
+    except (KeyboardInterrupt, EOFError):
+        print("\n\nEjecución interrumpida por el usuario. Los últimos cambios guardados se conservan.")

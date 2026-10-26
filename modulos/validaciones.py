@@ -91,12 +91,41 @@ def pedir_entero(mensaje):
     numero = 0
     while not valido:
         entrada = input(mensaje).strip()
-        if entrada.isdigit():
+        try:
             numero = int(entrada)
-            valido = True
-        else:
+        except ValueError:
             print("Entrada inválida. Debe ingresar un número entero.")
+        else:
+            if numero < 0:
+                print("Entrada inválida. El número no puede ser negativo.")
+            else:
+                valido = True
     return numero
+
+def pedir_nota(mensaje):
+    #solicita una nota entre 0 y 10 y valida la entrada
+    valido = False
+    nota = 0.0
+    while not valido:
+        entrada = input(mensaje).strip().replace(",", ".")
+        try:
+            nota = float(entrada)
+        except ValueError:
+            print("Entrada inválida. La nota debe ser un número (ej: 7 o 7.5).")
+        else:
+            if validar_nota(nota):
+                valido = True
+            else:
+                print("Entrada inválida. La nota debe estar entre 0 y 10.")
+    return nota
+
+def pedir_texto(mensaje):
+    #solicita un texto no vacío
+    texto = input(mensaje).strip()
+    while not texto:
+        print("Entrada inválida. El campo no puede estar vacío.")
+        texto = input(mensaje).strip()
+    return texto
 
 hay_ids_duplicados = existen_ids_duplicados
 hay_legajos_duplicados = existen_legajos_duplicados

@@ -1,0 +1,127 @@
+[
+  {
+    "id_materia": 1,
+    "id_estudiante": 1,
+    "nota": 10
+  },
+  {
+    "id_materia": 2,
+    "id_estudiante": 1,
+    "nota": 5
+  },
+  {
+    "id_materia": 3,
+    "id_estudiante": 1,
+    "nota": 2
+  },
+  {
+    "id_materia": 4,
+    "id_estudiante": 1,
+    "nota": 3
+  },
+  {
+    "id_materia": 5,
+    "id_estudiante": 1,
+    "nota": 9
+  },
+  {
+    "id_materia": 1,
+    "id_estudiante": 2,
+    "nota": 2
+  },
+  {
+    "id_materia": 2,
+    "id_estudiante": 2,
+    "nota": 4
+  },
+  {
+    "id_materia": 3,
+    "id_estudiante": 2,
+    "nota": 5
+  },
+  {
+    "id_materia": 4,
+    "id_estudiante": 2,
+    "nota": 7
+  },
+  {
+    "id_materia": 5,
+    "id_estudiante": 2,
+    "nota": 3
+  },
+  {
+    "id_materia": 1,
+    "id_estudiante": 3,
+    "nota": 4
+  },
+  {
+    "id_materia": 2,
+    "id_estudiante": 3,
+    "nota": 6
+  },
+  {
+    "id_materia": 3,
+    "id_estudiante": 3,
+    "nota": 2
+  },
+  {
+    "id_materia": 4,
+    "id_estudiante": 3,
+    "nota": 10
+  },
+  {
+    "id_materia": 5,
+    "id_estudiante": 3,
+    "nota": 0
+  },
+  {
+    "id_materia": 1,
+    "id_estudiante": 4,
+    "nota": 8
+  },
+  {
+    "id_materia": 2,
+    "id_estudiante": 4,
+    "nota": 9
+  },
+  {
+    "id_materia": 3,
+    "id_estudiante": 4,
+    "nota": 8
+  },
+  {
+    "id_materia": 4,
+    "id_estudiante": 4,
+    "nota": 7
+  },
+  {
+    "id_materia": 5,
+    "id_estudiante": 4,
+    "nota": 5
+  },
+  {
+    "id_materia": 1,
+    "id_estudiante": 5,
+    "nota": 10
+  },
+  {
+    "id_materia": 2,
+    "id_estudiante": 5,
+    "nota": 9
+  },
+  {
+    "id_materia": 3,
+    "id_estudiante": 5,
+    "nota": 2
+  },
+  {
+    "id_materia": 4,
+    "id_estudiante": 5,
+    "nota": 3
+  },
+  {
+    "id_materia": 5,
+    "id_estudiante": 5,
+    "nota": 0
+  }
+]

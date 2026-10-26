@@ -4,3 +4,4 @@ from .menus import *
 from .estadisticas import *
 from .validaciones import *
 from .interfaz import *
+from .archivos import *

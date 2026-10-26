@@ -42,27 +42,25 @@ def agregar_calificacion(calificaciones, id_materia, id_estudiante, nota):
     calificaciones.append([clave, nota])
     exito("Calificación registrada con éxito.")
 
+def _buscar_registro(registros, valor, posicion=0, indice=0):
+    if indice >= len(registros):
+        return None
+    if registros[indice][posicion] == valor:
+        return registros[indice]
+    return _buscar_registro(registros, valor, posicion, indice + 1)
+
+
 def buscar_estudiante(estudiantes, id_alumno):
-    for estudiante in estudiantes:
-        if estudiante[0] == id_alumno:
-            return estudiante
-    return None
+    return _buscar_registro(estudiantes, id_alumno)
 
 def buscar_materia(materias, id_materia):
-    for materia in materias:
-        if materia[0] == id_materia:
-            resultado = materia
-            return resultado
-    else:
-        resultado = "La materia no existe"
-    return resultado
+    materia = _buscar_registro(materias, id_materia)
+    return materia if materia is not None else "La materia no existe"
 
 def buscar_calificacion(calificaciones, id_materia, id_estudiante):
     clave = (id_materia, id_estudiante)
-    for fila in calificaciones:
-        if fila[0] == clave:
-            return fila
-    return "La calificación no existe."
+    calificacion = _buscar_registro(calificaciones, clave)
+    return calificacion if calificacion is not None else "La calificación no existe."
 
 def eliminar_estudiante(estudiantes, calificaciones, id_alumno):
     estudiante = buscar_estudiante(estudiantes, id_alumno)
