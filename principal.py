@@ -110,7 +110,7 @@ def ejecutar_sistema():
                             id_m = modulos.pedir_entero("ID Materia: ")
                             id_e = modulos.pedir_entero("ID Estudiante: ")
                             nota = modulos.pedir_nota("Nota (0-10): ")
-                            modulos.agregar_calificacion(datos.calificaciones, id_m, id_e, nota)
+                            modulos.agregar_calificacion(datos.estudiantes, datos.materias, datos.calificaciones, id_m, id_e, nota)
                         case "2":
                             id_m = modulos.pedir_entero("ID Materia: ")
                             id_e = modulos.pedir_entero("ID Estudiante: ")

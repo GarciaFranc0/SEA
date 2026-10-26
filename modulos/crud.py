@@ -28,9 +28,15 @@ def agregar_materia(materias, id_materia, nombre_materia):
         materias.append([id_materia, nombre_materia])
         exito("Materia registrada con éxito.")
 
-def agregar_calificacion(calificaciones, id_materia, id_estudiante, nota):
+def agregar_calificacion(estudiantes, materias, calificaciones, id_materia, id_estudiante, nota):
     if nota < 0 or nota > 10:
         alerta("La nota debe estar entre 0 y 10. No se puede agregar.")
+        return
+    if buscar_estudiante(estudiantes, id_estudiante) is None:
+        error(f"El estudiante con ID {id_estudiante} no existe. No se puede agregar la calificación.")
+        return
+    if _buscar_registro(materias, id_materia) is None:
+        error(f"La materia con ID {id_materia} no existe. No se puede agregar la calificación.")
         return
     clave = (id_materia, id_estudiante)
 
@@ -101,6 +107,10 @@ def actualizar_estudiante(estudiantes, id_alumno, nuevo_nombre, nuevo_apellido, 
     if estudiante is None:
         error("El estudiante no existe.")
         return False
+    for otro in estudiantes:
+        if otro[3] == int(nuevo_legajo) and otro[0] != id_alumno:
+            error("El legajo ya pertenece a otro estudiante. No se puede actualizar.")
+            return False
     estudiante[1] = nuevo_nombre
     estudiante[2] = nuevo_apellido
     estudiante[3] = int(nuevo_legajo)
