@@ -1,6 +1,6 @@
-from modulos.interfaz import titulo, separador
+from .interfaz import titulo, separador
 
-def mostrar_menu_principal(rol):
+def mostrar_menu_principal():
     titulo("Menú Principal")
     print("  [1] 🎓 Gestión de Estudiantes")
     print("  [2] 📚 Gestión de Materias")

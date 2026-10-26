@@ -3,7 +3,7 @@ import json
 import os
 
 from .interfaz import error, alerta
-from .validaciones import ids_duplicados, legajos_duplicados, validar_nota
+from .validaciones import valores_duplicados, validar_nota
 
 
 CARPETA_DATOS = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "datos")
@@ -83,10 +83,10 @@ def _leer_csv(ruta, encabezado, convertir):
 
 def _leer_estudiantes(ruta):
     estudiantes = _leer_csv(ruta, ENCABEZADO_ESTUDIANTES, _convertir_estudiante)
-    repetidos = ids_duplicados(estudiantes)
+    repetidos = valores_duplicados(estudiantes)
     if repetidos:
         raise ValueError(f"IDs de estudiante repetidos: {sorted(repetidos)}")
-    repetidos = legajos_duplicados(estudiantes)
+    repetidos = valores_duplicados(estudiantes, 3)
     if repetidos:
         raise ValueError(f"legajos repetidos: {sorted(repetidos)}")
     return estudiantes
@@ -94,7 +94,7 @@ def _leer_estudiantes(ruta):
 
 def _leer_materias(ruta):
     materias = _leer_csv(ruta, ENCABEZADO_MATERIAS, _convertir_materia)
-    repetidos = ids_duplicados(materias)
+    repetidos = valores_duplicados(materias)
     if repetidos:
         raise ValueError(f"IDs de materia repetidos: {sorted(repetidos)}")
     return materias
@@ -111,7 +111,7 @@ def _leer_calificaciones(ruta):
             calificaciones.append(_convertir_calificacion(item))
         except ValueError as e:
             alerta(f"{os.path.basename(ruta)}, calificación #{posicion} ignorada: {e}.")
-    repetidos = ids_duplicados(calificaciones)
+    repetidos = valores_duplicados(calificaciones)
     if repetidos:
         raise ValueError(f"calificaciones repetidas (materia, estudiante): {sorted(repetidos)}")
     return calificaciones

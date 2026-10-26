@@ -1,6 +1,7 @@
 import datos
 import modulos
-from modulos.estadisticas import estudiantes_comunes_materias, estudiantes_sin_calificacion
+
+
 def ejecutar_sistema():
     print("==================================================")
     print(" BIENVENIDO AL SISTEMA DE GESTIÓN ACADÉMICA ")
@@ -26,8 +27,8 @@ def ejecutar_sistema():
                     rol_usuario = "admin"
                     autenticado = True
             case "2":
-                exito, id_est = modulos.login_estudiante(datos.estudiantes)
-                if exito:
+                login_ok, id_est = modulos.login_estudiante(datos.estudiantes)
+                if login_ok:
                     rol_usuario = "estudiante"
                     id_estudiante_sesion = id_est
                     autenticado = True
@@ -40,175 +41,175 @@ def ejecutar_sistema():
     # 2. BUCLE PRINCIPAL DE NAVEGACIÓN
     sistema_activo = autenticado
     while sistema_activo:
-        modulos.mostrar_menu_principal(rol_usuario)
+        modulos.mostrar_menu_principal()
         opcion = input("\nSeleccione una opción: ").strip()
         
-        match opcion:
-            case "1":
-                modulos.sub_menu_estudiantes(rol_usuario)
-                sub_op = input("Seleccione sub-opción: ").strip()
-                
-                if rol_usuario == "admin":
-                    match sub_op:
-                        case "1":
-                            id_a = modulos.pedir_entero("ID Estudiante: ")
-                            nom = modulos.pedir_texto("Nombre: ")
-                            ape = modulos.pedir_texto("Apellido: ")
-                            leg = modulos.pedir_entero("Legajo: ")
-                            modulos.agregar_estudiante(datos.estudiantes, id_a, nom, ape, leg)
-                        case "2":
-                            id_a = modulos.pedir_entero("ID a consultar: ")
-                            modulos.mostrar_estudiantes(datos.estudiantes, id_a)
-                        case "3":
-                            id_a = modulos.pedir_entero("ID a eliminar: ")
-                            modulos.eliminar_estudiante(datos.estudiantes, datos.calificaciones, id_a)
-                        case "4":
-                            id_a = modulos.pedir_entero("ID a actualizar: ")
-                            nom = modulos.pedir_texto("Nuevo Nombre: ")
-                            ape = modulos.pedir_texto("Nuevo Apellido: ")
-                            leg = modulos.pedir_entero("Nuevo Legajo: ")
-                            modulos.actualizar_estudiante(datos.estudiantes, id_a, nom, ape, leg)
-                    modulos.guardar_datos(datos.estudiantes, datos.materias, datos.calificaciones)
-                else:
-                    if sub_op == "1":
-                        modulos.mostrar_estudiantes(datos.estudiantes, id_estudiante_sesion)
+        try:
+            match opcion:
+                case "1":
+                    modulos.sub_menu_estudiantes(rol_usuario)
+                    sub_op = modulos.pedir_opcion("Seleccione sub-opción: ", 5 if rol_usuario == "admin" else 2)
 
-            case "2":
-                modulos.sub_menu_materias(rol_usuario)
-                sub_op = input("Seleccione sub-opción: ").strip()
-                
-                if rol_usuario == "admin":
-                    match sub_op:
-                        case "1":
-                            id_m = modulos.pedir_entero("ID Materia: ")
-                            nom_m = modulos.pedir_texto("Nombre de la Materia: ")
-                            modulos.agregar_materia(datos.materias, id_m, nom_m)
-                        case "2":
-                            id_m = modulos.pedir_entero("ID a consultar: ")
-                            modulos.mostrar_materias(datos.materias, id_m)
-                        case "3":
-                            id_m = modulos.pedir_entero("ID a eliminar: ")
-                            modulos.eliminar_materia(datos.materias, datos.calificaciones, id_m)
-                        case "4":
-                            id_m = modulos.pedir_entero("ID a actualizar: ")
-                            nom_m = modulos.pedir_texto("Nuevo Nombre Materia: ")
-                            modulos.actualizar_materia(datos.materias, id_m, nom_m)
-                    modulos.guardar_datos(datos.estudiantes, datos.materias, datos.calificaciones)
-                else:
-                    if sub_op == "1":
-                        print("\n--- MATERIAS DISPONIBLES ---")
-                        for id_m, nombre_materia in datos.materias:
-                            print(f"ID: {id_m} | Nombre: {nombre_materia}")
+                    if rol_usuario == "admin":
+                        match sub_op:
+                            case "1":
+                                id_a = modulos.pedir_entero("ID Estudiante: ")
+                                nom = modulos.pedir_texto("Nombre: ")
+                                ape = modulos.pedir_texto("Apellido: ")
+                                leg = modulos.pedir_entero("Legajo: ")
+                                modulos.agregar_estudiante(datos.estudiantes, id_a, nom, ape, leg)
+                            case "2":
+                                id_a = modulos.pedir_entero("ID a consultar: ")
+                                modulos.mostrar_estudiantes(datos.estudiantes, id_a)
+                            case "3":
+                                id_a = modulos.pedir_entero("ID a eliminar: ")
+                                modulos.eliminar_estudiante(datos.estudiantes, datos.calificaciones, id_a)
+                            case "4":
+                                id_a = modulos.pedir_entero("ID a actualizar: ")
+                                nom = modulos.pedir_texto("Nuevo Nombre: ")
+                                ape = modulos.pedir_texto("Nuevo Apellido: ")
+                                leg = modulos.pedir_entero("Nuevo Legajo: ")
+                                modulos.actualizar_estudiante(datos.estudiantes, id_a, nom, ape, leg)
+                        modulos.guardar_datos(datos.estudiantes, datos.materias, datos.calificaciones)
+                    else:
+                        if sub_op == "1":
+                            modulos.mostrar_estudiantes(datos.estudiantes, id_estudiante_sesion)
 
-            case "3":
-                modulos.sub_menu_calificaciones(rol_usuario)
-                sub_op = input("Seleccione sub-opción: ").strip()
-                
-                if rol_usuario == "admin":
-                    match sub_op:
-                        case "1":
-                            id_m = modulos.pedir_entero("ID Materia: ")
-                            id_e = modulos.pedir_entero("ID Estudiante: ")
-                            nota = modulos.pedir_nota("Nota (0-10): ")
-                            modulos.agregar_calificacion(datos.estudiantes, datos.materias, datos.calificaciones, id_m, id_e, nota)
-                        case "2":
-                            id_m = modulos.pedir_entero("ID Materia: ")
-                            id_e = modulos.pedir_entero("ID Estudiante: ")
-                            nota = modulos.pedir_nota("Nueva Nota (0-10): ")
-                            modulos.actualizar_calificacion(datos.calificaciones, id_m, id_e, nota)
-                        case "3":
-                            id_m = modulos.pedir_entero("ID Materia: ")
-                            id_e = modulos.pedir_entero("ID Estudiante: ")
-                            modulos.eliminar_calificacion(datos.calificaciones, id_m, id_e)
-                        case "4":
-                            id_e = modulos.pedir_entero("ID Estudiante: ")
-                            modulos.mostrar_calificaciones(datos.estudiantes, datos.materias, datos.calificaciones, id_e)
-                    modulos.guardar_datos(datos.estudiantes, datos.materias, datos.calificaciones)
-                else:
-                    if sub_op == "1":
-                        modulos.mostrar_calificaciones(datos.estudiantes, datos.materias, datos.calificaciones, id_estudiante_sesion)
+                case "2":
+                    modulos.sub_menu_materias(rol_usuario)
+                    sub_op = modulos.pedir_opcion("Seleccione sub-opción: ", 5 if rol_usuario == "admin" else 2)
 
-            case "4":
-                modulos.subtitulo("Reportes y Estadísticas Generales")
-                if rol_usuario == "admin":
-                    print("  [1] 📈 Promedio general por materia")
-                    print("  [2] 📊 Porcentaje de aprobados por materia")
-                    print("  [3] ⭐ Porcentaje de alumnos destacados (>=8.0)")
-                    print("  [4] ↕️  Notas extremas del sistema")
-                    print("  [5] 👤 Resumen académico completo por alumno")
-                    print("  [6] 🔗 Estudiantes en común entre dos materias")
-                    print("  [7] 🚫 Estudiantes sin calificaciones")
-                    sub_e = input("\nSeleccione reporte: ").strip()
-                    
-                    match sub_e:
-                        case "1":
-                            id_m = modulos.pedir_entero("ID Materia: ")
-                            prom = modulos.promedio_materia(datos.calificaciones, id_m)
-                            modulos.subtitulo(f"Promedio de la materia ID {id_m}: {prom:.2f}")
-                        # Dentro del match sub_e (Estadísticas Admin):
-                        case "2":
-                            id_m = modulos.pedir_entero("Ingrese ID de la Materia: ")
-                            porc = modulos.porcentaje_aprobados(datos.calificaciones, id_m)
-                            modulos.subtitulo(f"Porcentaje de Aprobados en la Materia (ID {id_m}): {porc:.1f}%")
-                        case "3":
-                            porc_a = modulos.porcentaje_promedio_alto(datos.estudiantes, datos.calificaciones)
-                            modulos.subtitulo(f"Alumnos con promedio alto (>= 8.0): {porc_a:.1f}%")
-                        case "4":
-                            ext = modulos.notas_extremas(datos.calificaciones)
-                            modulos.subtitulo("Calificaciones Extremas del Sistema")
-                            print(f"  🔻 Nota más baja: {ext[0]}")
-                            print(f"  🔺 Nota más alta: {ext[1]}")
-                            modulos.separador()
-                        case "5":
-                            id_e = modulos.pedir_entero("Ingrese ID del Estudiante: ")
-                            estudiante = modulos.buscar_estudiante(datos.estudiantes, id_e)
-    
-                            if estudiante is None:
-                                modulos.error(f"El estudiante con ID {id_e} no existe en el sistema.")
-                            else:
-                                res = modulos.estadistica_completa_estudiante(
-                                datos.estudiantes, datos.calificaciones, datos.materias, id_e
-                                )
-                                modulos.subtitulo(f"Resumen Académico de {estudiante[1]} {estudiante[2]}")
+                    if rol_usuario == "admin":
+                        match sub_op:
+                            case "1":
+                                id_m = modulos.pedir_entero("ID Materia: ")
+                                nom_m = modulos.pedir_texto("Nombre de la Materia: ")
+                                modulos.agregar_materia(datos.materias, id_m, nom_m)
+                            case "2":
+                                id_m = modulos.pedir_entero("ID a consultar: ")
+                                modulos.mostrar_materias(datos.materias, id_m)
+                            case "3":
+                                id_m = modulos.pedir_entero("ID a eliminar: ")
+                                modulos.eliminar_materia(datos.materias, datos.calificaciones, id_m)
+                            case "4":
+                                id_m = modulos.pedir_entero("ID a actualizar: ")
+                                nom_m = modulos.pedir_texto("Nuevo Nombre Materia: ")
+                                modulos.actualizar_materia(datos.materias, id_m, nom_m)
+                        modulos.guardar_datos(datos.estudiantes, datos.materias, datos.calificaciones)
+                    else:
+                        if sub_op == "1":
+                            print("\n--- MATERIAS DISPONIBLES ---")
+                            for id_m, nombre_materia in datos.materias:
+                                print(f"ID: {id_m} | Nombre: {nombre_materia}")
 
-                                if res['total'] > 0:
-                                    print(f"  📚 Materias cursadas: {res['total']}")
-                                    print(f"  📊 Promedio General:  {res['promedio']:.2f}")
-                                    print(f"  🔺 Nota más alta:     {res['maxima']}")
-                                    print(f"  🔻 Nota más baja:     {res['minima']}")
+                case "3":
+                    modulos.sub_menu_calificaciones(rol_usuario)
+                    sub_op = modulos.pedir_opcion("Seleccione sub-opción: ", 5 if rol_usuario == "admin" else 2)
+
+                    if rol_usuario == "admin":
+                        match sub_op:
+                            case "1":
+                                id_m = modulos.pedir_entero("ID Materia: ")
+                                id_e = modulos.pedir_entero("ID Estudiante: ")
+                                nota = modulos.pedir_nota("Nota (0-10): ")
+                                modulos.agregar_calificacion(datos.estudiantes, datos.materias, datos.calificaciones, id_m, id_e, nota)
+                            case "2":
+                                id_m = modulos.pedir_entero("ID Materia: ")
+                                id_e = modulos.pedir_entero("ID Estudiante: ")
+                                nota = modulos.pedir_nota("Nueva Nota (0-10): ")
+                                modulos.actualizar_calificacion(datos.calificaciones, id_m, id_e, nota)
+                            case "3":
+                                id_m = modulos.pedir_entero("ID Materia: ")
+                                id_e = modulos.pedir_entero("ID Estudiante: ")
+                                modulos.eliminar_calificacion(datos.calificaciones, id_m, id_e)
+                            case "4":
+                                id_e = modulos.pedir_entero("ID Estudiante: ")
+                                modulos.mostrar_calificaciones(datos.estudiantes, datos.materias, datos.calificaciones, id_e)
+                        modulos.guardar_datos(datos.estudiantes, datos.materias, datos.calificaciones)
+                    else:
+                        if sub_op == "1":
+                            modulos.mostrar_calificaciones(datos.estudiantes, datos.materias, datos.calificaciones, id_estudiante_sesion)
+
+                case "4":
+                    modulos.subtitulo("Reportes y Estadísticas Generales")
+                    if rol_usuario == "admin":
+                        print("  [1] 📈 Promedio general por materia")
+                        print("  [2] 📊 Porcentaje de aprobados por materia")
+                        print("  [3] ⭐ Porcentaje de alumnos destacados (>=8.0)")
+                        print("  [4] ↕️  Notas extremas del sistema")
+                        print("  [5] 👤 Resumen académico completo por alumno")
+                        print("  [6] 🔗 Estudiantes en común entre dos materias")
+                        print("  [7] 🚫 Estudiantes sin calificaciones")
+                        print("  [8] ↩️  Volver al menú principal")
+                        sub_e = modulos.pedir_opcion("\nSeleccione reporte: ", 8)
+
+                        match sub_e:
+                            case "1":
+                                id_m = modulos.pedir_entero("ID Materia: ")
+                                prom = modulos.promedio_materia(datos.calificaciones, id_m)
+                                modulos.subtitulo(f"Promedio de la materia ID {id_m}: {prom:.2f}")
+                            case "2":
+                                id_m = modulos.pedir_entero("Ingrese ID de la Materia: ")
+                                porc = modulos.porcentaje_aprobados(datos.calificaciones, id_m)
+                                modulos.subtitulo(f"Porcentaje de Aprobados en la Materia (ID {id_m}): {porc:.1f}%")
+                            case "3":
+                                porc_a = modulos.porcentaje_promedio_alto(datos.estudiantes, datos.calificaciones)
+                                modulos.subtitulo(f"Alumnos con promedio alto (>= 8.0): {porc_a:.1f}%")
+                            case "4":
+                                ext = modulos.notas_extremas(datos.calificaciones)
+                                modulos.subtitulo("Calificaciones Extremas del Sistema")
+                                print(f"  🔻 Nota más baja: {ext[0]}")
+                                print(f"  🔺 Nota más alta: {ext[1]}")
+                                modulos.separador()
+                            case "5":
+                                id_e = modulos.pedir_entero("Ingrese ID del Estudiante: ")
+                                estudiante = modulos.buscar_estudiante(datos.estudiantes, id_e)
+                                if estudiante is None:
+                                    modulos.error(f"El estudiante con ID {id_e} no existe en el sistema.")
                                 else:
-                                    modulos.alerta("El estudiante está registrado pero aún no posee calificaciones cargadas.")
-                                    modulos.separador()
-                        case "6":
-                            id_m1 = modulos.pedir_entero("Ingrese ID de la primera Materia: ")
-                            id_m2 = modulos.pedir_entero("Ingrese ID de la segunda Materia: ")
-                            comunes = estudiantes_comunes_materias(datos.calificaciones, id_m1, id_m2)
-                            modulos.subtitulo(f"Estudiantes en común entre materia {id_m1} y materia {id_m2}")
-                            if comunes:
-                                print(f"  Total de estudiantes en común: {len(comunes)}")
-                                print(f"  IDs de estudiantes: {sorted(comunes)}")
-                            else:
-                                print("  No hay estudiantes en común entre estas materias.")
-                        case "7":
-                            sin_notas = estudiantes_sin_calificacion(datos.estudiantes, datos.calificaciones)
-                            modulos.subtitulo(f"Estudiantes sin calificaciones registradas")
-                            if sin_notas:
-                                print(f"  IDs de estudiantes: {sorted(sin_notas)}")
-                            else:
-                                print("  Todos los estudiantes tienen calificaciones registradas.")
-                else:
-                    res = modulos.estadistica_completa_estudiante(datos.estudiantes, datos.calificaciones, datos.materias, id_estudiante_sesion)
-                    print(f"\n--- TU RESUMEN ACADÉMICO ---")
-                    print(f"Materias cursadas: {res['total']}")
-                    print(f"Tu promedio general: {res['promedio']:.2f}")
-                    print(f"Tu nota más alta: {res['maxima']}")
-                    print(f"Tu nota más baja: {res['minima']}")
+                                    res = modulos.estadistica_completa_estudiante(datos.calificaciones, id_e)
+                                    modulos.subtitulo(f"Resumen Académico de {estudiante[1]} {estudiante[2]}")
 
-            case "5":
-                print("\nCerrando sesión. ¡Gracias por usar el sistema!")
-                sistema_activo = False
-            case _:
-                print("Opción no válida. Por favor, intente nuevamente.")
+                                    if res['total'] > 0:
+                                        print(f"  📚 Materias cursadas: {res['total']}")
+                                        print(f"  📊 Promedio General:  {res['promedio']:.2f}")
+                                        print(f"  🔺 Nota más alta:     {res['maxima']}")
+                                        print(f"  🔻 Nota más baja:     {res['minima']}")
+                                    else:
+                                        modulos.alerta("El estudiante está registrado pero aún no posee calificaciones cargadas.")
+                                        modulos.separador()
+                            case "6":
+                                id_m1 = modulos.pedir_entero("Ingrese ID de la primera Materia: ")
+                                id_m2 = modulos.pedir_entero("Ingrese ID de la segunda Materia: ")
+                                comunes = modulos.estudiantes_comunes_materias(datos.calificaciones, id_m1, id_m2)
+                                modulos.subtitulo(f"Estudiantes en común entre materia {id_m1} y materia {id_m2}")
+                                if comunes:
+                                    print(f"  Total de estudiantes en común: {len(comunes)}")
+                                    print(f"  IDs de estudiantes: {sorted(comunes)}")
+                                else:
+                                    print("  No hay estudiantes en común entre estas materias.")
+                            case "7":
+                                sin_notas = modulos.estudiantes_sin_calificacion(datos.estudiantes, datos.calificaciones)
+                                modulos.subtitulo("Estudiantes sin calificaciones registradas")
+                                if sin_notas:
+                                    print(f"  IDs de estudiantes: {sorted(sin_notas)}")
+                                else:
+                                    print("  Todos los estudiantes tienen calificaciones registradas.")
+                    else:
+                        res = modulos.estadistica_completa_estudiante(datos.calificaciones, id_estudiante_sesion)
+                        print(f"\n--- TU RESUMEN ACADÉMICO ---")
+                        print(f"Materias cursadas: {res['total']}")
+                        print(f"Tu promedio general: {res['promedio']:.2f}")
+                        print(f"Tu nota más alta: {res['maxima']}")
+                        print(f"Tu nota más baja: {res['minima']}")
+
+                case "5":
+                    print("\nCerrando sesión. ¡Gracias por usar el sistema!")
+                    sistema_activo = False
+                case _:
+                    print("Opción no válida. Por favor, intente nuevamente.")
+        except modulos.ErrorGestion as e:
+            modulos.error(str(e))
 
 if __name__ == "__main__":
     try:

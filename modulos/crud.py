@@ -1,52 +1,7 @@
-from .interfaz import subtitulo, exito, error, separador, alerta
+from .interfaz import subtitulo, exito, separador, alerta
 from .validaciones import validar_legajo, validar_nota
+from .excepciones import RegistroNoEncontrado, RegistroDuplicado, DatoInvalido
 
-
-def agregar_estudiante(estudiantes, id_alumno, nombre, apellido, legajo):
-    if not validar_legajo(legajo):
-        alerta("El legajo debe contener solo dígitos.")
-        return False
-
-    for estudiante in estudiantes:
-        if estudiante[0] == id_alumno:
-            error("El ID del estudiante ya existe. No se puede agregar.")
-            return False
-
-        if estudiante[3] == legajo:
-            error("El legajo del estudiante ya existe. No se puede agregar.")
-            return False
-
-    nuevo_estudiante = [id_alumno, nombre, apellido, legajo]
-    estudiantes.append(nuevo_estudiante)
-    exito("Estudiante registrado con éxito.")
-    return True
-
-def agregar_materia(materias, id_materia, nombre_materia):
-    if id_materia in [materia[0] for materia in materias]:
-        error("El ID de la materia ya existe. No se puede agregar.")
-    else:
-        materias.append([id_materia, nombre_materia])
-        exito("Materia registrada con éxito.")
-
-def agregar_calificacion(estudiantes, materias, calificaciones, id_materia, id_estudiante, nota):
-    if nota < 0 or nota > 10:
-        alerta("La nota debe estar entre 0 y 10. No se puede agregar.")
-        return
-    if buscar_estudiante(estudiantes, id_estudiante) is None:
-        error(f"El estudiante con ID {id_estudiante} no existe. No se puede agregar la calificación.")
-        return
-    if _buscar_registro(materias, id_materia) is None:
-        error(f"La materia con ID {id_materia} no existe. No se puede agregar la calificación.")
-        return
-    clave = (id_materia, id_estudiante)
-
-    for fila in calificaciones: 
-        if fila[0] == clave:
-            error("La calificación ya existe. No se puede agregar.")
-            return
-   
-    calificaciones.append([clave, nota])
-    exito("Calificación registrada con éxito.")
 
 def _buscar_registro(registros, valor, posicion=0, indice=0):
     if indice >= len(registros):
@@ -60,87 +15,100 @@ def buscar_estudiante(estudiantes, id_alumno):
     return _buscar_registro(estudiantes, id_alumno)
 
 def buscar_materia(materias, id_materia):
-    materia = _buscar_registro(materias, id_materia)
-    return materia if materia is not None else "La materia no existe"
+    return _buscar_registro(materias, id_materia)
 
 def buscar_calificacion(calificaciones, id_materia, id_estudiante):
-    clave = (id_materia, id_estudiante)
-    calificacion = _buscar_registro(calificaciones, clave)
-    return calificacion if calificacion is not None else "La calificación no existe."
+    return _buscar_registro(calificaciones, (id_materia, id_estudiante))
+
+
+def _obtener_estudiante(estudiantes, id_alumno):
+    estudiante = buscar_estudiante(estudiantes, id_alumno)
+    if estudiante is None:
+        raise RegistroNoEncontrado(f"El estudiante con ID {id_alumno} no existe.")
+    return estudiante
+
+def _obtener_materia(materias, id_materia):
+    materia = buscar_materia(materias, id_materia)
+    if materia is None:
+        raise RegistroNoEncontrado(f"La materia con ID {id_materia} no existe.")
+    return materia
+
+def _obtener_calificacion(calificaciones, id_materia, id_estudiante):
+    calificacion = buscar_calificacion(calificaciones, id_materia, id_estudiante)
+    if calificacion is None:
+        raise RegistroNoEncontrado(f"No existe calificación del estudiante {id_estudiante} en la materia {id_materia}.")
+    return calificacion
+
+def _validar_legajo(estudiantes, legajo, id_alumno):
+    if not validar_legajo(legajo):
+        raise DatoInvalido("El legajo debe contener solo dígitos.")
+    for otro in estudiantes:
+        if otro[3] == int(legajo) and otro[0] != id_alumno:
+            raise RegistroDuplicado(f"El legajo {legajo} ya pertenece a otro estudiante.")
+
+def _validar_nota(nota):
+    if not validar_nota(nota):
+        raise DatoInvalido("La nota debe estar entre 0 y 10.")
+
+
+def agregar_estudiante(estudiantes, id_alumno, nombre, apellido, legajo):
+    if buscar_estudiante(estudiantes, id_alumno) is not None:
+        raise RegistroDuplicado(f"Ya existe un estudiante con ID {id_alumno}.")
+    _validar_legajo(estudiantes, legajo, id_alumno)
+    estudiantes.append([id_alumno, nombre, apellido, int(legajo)])
+    exito("Estudiante registrado con éxito.")
+
+def agregar_materia(materias, id_materia, nombre_materia):
+    if buscar_materia(materias, id_materia) is not None:
+        raise RegistroDuplicado(f"Ya existe una materia con ID {id_materia}.")
+    materias.append([id_materia, nombre_materia])
+    exito("Materia registrada con éxito.")
+
+def agregar_calificacion(estudiantes, materias, calificaciones, id_materia, id_estudiante, nota):
+    _validar_nota(nota)
+    _obtener_estudiante(estudiantes, id_estudiante)
+    _obtener_materia(materias, id_materia)
+    if buscar_calificacion(calificaciones, id_materia, id_estudiante) is not None:
+        raise RegistroDuplicado("La calificación ya existe. Use la opción de modificar.")
+    calificaciones.append([(id_materia, id_estudiante), nota])
+    exito("Calificación registrada con éxito.")
+
 
 def eliminar_estudiante(estudiantes, calificaciones, id_alumno):
-    estudiante = buscar_estudiante(estudiantes, id_alumno)
-    if estudiante is None:
-        error("El estudiante no existe.")
-        return False
-
-    estudiantes.remove(estudiante)
-    calificaciones_restantes = list(filter(lambda calificacion: calificacion[0][1] != id_alumno, calificaciones))
-    calificaciones[:] = calificaciones_restantes
+    estudiantes.remove(_obtener_estudiante(estudiantes, id_alumno))
+    calificaciones[:] = list(filter(lambda calificacion: calificacion[0][1] != id_alumno, calificaciones))
     exito("Estudiante eliminado correctamente.")
-    return True
-    
+
 def eliminar_materia(materias, calificaciones, id_materia):
-    materia = buscar_materia(materias, id_materia)
-    if materia != "La materia no existe":
-        materias.remove(materia)
-        calificaciones_restantes = list(filter(lambda calificacion: calificacion[0][0] != id_materia, calificaciones))
-        calificaciones[:] = calificaciones_restantes
-        exito("Materia eliminada correctamente.")
-    else:
-        error("La materia no existe.")
+    materias.remove(_obtener_materia(materias, id_materia))
+    calificaciones[:] = list(filter(lambda calificacion: calificacion[0][0] != id_materia, calificaciones))
+    exito("Materia eliminada correctamente.")
 
 def eliminar_calificacion(calificaciones, id_materia, id_estudiante):
-    clave = (id_materia, id_estudiante)
-    for fila in calificaciones:
-        if fila[0] == clave:
-            calificaciones.remove(fila)
-            exito("Calificación eliminada correctamente.")
-            return
-    error("La calificación no existe.")
+    calificaciones.remove(_obtener_calificacion(calificaciones, id_materia, id_estudiante))
+    exito("Calificación eliminada correctamente.")
+
 
 def actualizar_estudiante(estudiantes, id_alumno, nuevo_nombre, nuevo_apellido, nuevo_legajo):
-    if not validar_legajo(nuevo_legajo):
-        alerta("El legajo debe contener solo dígitos.")
-        return False
-    estudiante = buscar_estudiante(estudiantes, id_alumno)
-    if estudiante is None:
-        error("El estudiante no existe.")
-        return False
-    for otro in estudiantes:
-        if otro[3] == int(nuevo_legajo) and otro[0] != id_alumno:
-            error("El legajo ya pertenece a otro estudiante. No se puede actualizar.")
-            return False
+    estudiante = _obtener_estudiante(estudiantes, id_alumno)
+    _validar_legajo(estudiantes, nuevo_legajo, id_alumno)
     estudiante[1] = nuevo_nombre
     estudiante[2] = nuevo_apellido
     estudiante[3] = int(nuevo_legajo)
     exito("Estudiante actualizado correctamente.")
-    return True
-    
 
-def actualizar_materia(materias ,id_materia, nueva_materia):
-    materia = buscar_materia(materias, id_materia)
-    if materia != "La materia no existe":
-        materia[1] = nueva_materia
-        exito("Materia actualizada correctamente.")
-    else:
-        error("La materia no existe.")
+def actualizar_materia(materias, id_materia, nueva_materia):
+    _obtener_materia(materias, id_materia)[1] = nueva_materia
+    exito("Materia actualizada correctamente.")
 
 def actualizar_calificacion(calificaciones, id_materia, id_estudiante, nueva_calificacion):
-    clave = (id_materia, id_estudiante)
-    for fila in calificaciones:
-        if fila[0] == clave:
-            fila[1] = nueva_calificacion
-            exito("Calificación actualizada correctamente.")
-            return
-    error("La calificación no existe.")
+    _validar_nota(nueva_calificacion)
+    _obtener_calificacion(calificaciones, id_materia, id_estudiante)[1] = nueva_calificacion
+    exito("Calificación actualizada correctamente.")
+
 
 def mostrar_estudiantes(estudiantes, id_alumno):
-    estudiante = buscar_estudiante(estudiantes, id_alumno)
-    if estudiante is None:
-        error("El estudiante solicitado no existe.")
-        return
-
+    estudiante = _obtener_estudiante(estudiantes, id_alumno)
     subtitulo("Información del Estudiante")
     print(f"  {'ID':<6} | {'NOMBRE Y APELLIDO':<25} | {'LEGAJO':<10}")
     separador()
@@ -149,30 +117,25 @@ def mostrar_estudiantes(estudiantes, id_alumno):
     separador()
 
 def mostrar_materias(materias, id_materia):
-    materia = buscar_materia(materias, id_materia)
-    if materia == "La materia no existe":
-        error("La materia no existe")
-        return
-
-    print(f"ID: {id_materia} | Nombre: {materia[1]}")
+    materia = _obtener_materia(materias, id_materia)
+    subtitulo("Información de la Materia")
+    print(f"  {'ID':<6} | {'NOMBRE':<25}")
+    separador()
+    print(f"  {materia[0]:<6} | {materia[1]:<25}")
+    separador()
 
 def mostrar_calificaciones(estudiantes, materias, calificaciones, id_estudiante):
-    estudiante = buscar_estudiante(estudiantes, id_estudiante)
-    if estudiante is None:
-        error(f"El estudiante con ID {id_estudiante} no existe en el sistema.")
-        return
+    estudiante = _obtener_estudiante(estudiantes, id_estudiante)
     calificaciones_estudiante = [cal for cal in calificaciones if cal[0][1] == id_estudiante]
-    if calificaciones_estudiante:
-        subtitulo(f"Boletín de Calificaciones: {estudiante[1]} {estudiante[2]}")
-        print(f"  {'MATERIA':<25} | {'NOTA':<6} | {'ESTADO':<10}")
-        separador()
-        for cal in calificaciones_estudiante:
-            id_materia = cal[0][0]
-            nota = cal[1]
-            materia = buscar_materia(materias, id_materia)
-            nombre_m = materia[1] if isinstance(materia, list) else "Desconocida"
-            estado = "Aprobado" if nota >= 4.0 else "Reprobado"
-            print(f"  {nombre_m:<25} | {nota:<6.1f} | {estado:<10}")
-        separador()
-    else:
+    if not calificaciones_estudiante:
         alerta(f"El estudiante {estudiante[1]} {estudiante[2]} no tiene calificaciones registradas.")
+        return
+    subtitulo(f"Boletín de Calificaciones: {estudiante[1]} {estudiante[2]}")
+    print(f"  {'MATERIA':<25} | {'NOTA':<6} | {'ESTADO':<10}")
+    separador()
+    for (id_materia, _), nota in calificaciones_estudiante:
+        materia = buscar_materia(materias, id_materia)
+        nombre_m = materia[1] if materia is not None else "Desconocida"
+        estado = "Aprobado" if nota >= 4.0 else "Reprobado"
+        print(f"  {nombre_m:<25} | {nota:<6.1f} | {estado:<10}")
+    separador()

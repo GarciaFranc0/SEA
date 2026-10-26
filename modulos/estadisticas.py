@@ -1,12 +1,18 @@
 from functools import reduce
 
-def calcular_promedio(calificaciones, id_estudiante):
-    calificaciones_estudiante = list(filter(lambda c: c[0][1] == id_estudiante, calificaciones))
-    if calificaciones_estudiante:
-        notas = list(map(lambda c: c[1], calificaciones_estudiante))
+def _promedio(calificaciones, posicion, identificador):
+    # posicion 0 filtra por materia y posicion 1 por estudiante dentro de la clave (materia, estudiante)
+    notas = list(map(lambda c: c[1], filter(lambda c: c[0][posicion] == identificador, calificaciones)))
+    if notas:
         suma = reduce(lambda acumulado, nota: acumulado + nota, notas, 0)
         return suma / len(notas)
     return 0.0
+
+def calcular_promedio(calificaciones, id_estudiante):
+    return _promedio(calificaciones, 1, id_estudiante)
+
+def promedio_materia(calificaciones, id_materia):
+    return _promedio(calificaciones, 0, id_materia)
 
 def porcentaje_aprobados(calificaciones, id_materia):
     calificaciones_materia = list(filter(lambda c: c[0][0] == id_materia, calificaciones))
@@ -37,14 +43,12 @@ def porcentaje_promedio_alto(estudiantes, calificaciones):
             id_est = estudiante[0]
             promedio = calcular_promedio(calificaciones, id_est)
             if promedio >= 8.0:
-                alumnos_calif_alta += 1         
-        return (alumnos_calif_alta / total_estudiantes) * 100     
+                alumnos_calif_alta += 1
+        return (alumnos_calif_alta / total_estudiantes) * 100
     return 0.0
 
-# modulos/estadisticas.py
-
-def estadistica_completa_estudiante(estudiantes, calificaciones, materias, id_estudiante):
-    notas_estudiante = [cal[1] for cal in calificaciones if cal[0][1] == id_estudiante] 
+def estadistica_completa_estudiante(calificaciones, id_estudiante):
+    notas_estudiante = [cal[1] for cal in calificaciones if cal[0][1] == id_estudiante]
     total_materias = len(notas_estudiante)
     promedio = 0.0
     max_nota = 0.0
@@ -59,14 +63,6 @@ def estadistica_completa_estudiante(estudiantes, calificaciones, materias, id_es
         "maxima": max_nota,
         "minima": min_nota
     }
-
-def promedio_materia(calificaciones, id_materia):
-    calificaciones_materia = list(filter(lambda c: c[0][0] == id_materia, calificaciones))
-    if calificaciones_materia:
-        notas = list(map(lambda c: c[1], calificaciones_materia))
-        suma_total = reduce(lambda acumulado, nota: acumulado + nota, notas, 0)
-        return suma_total / len(notas)
-    return 0.0
 
 def estudiantes_comunes_materias(calificaciones, id_materia1, id_materia2):
     estudiantes_materia1 = set(map(lambda cal: cal[0][1], filter(lambda cal: cal[0][0] == id_materia1, calificaciones)))

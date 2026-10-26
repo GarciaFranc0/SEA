@@ -5,3 +5,4 @@ from .estadisticas import *
 from .validaciones import *
 from .interfaz import *
 from .archivos import *
+from .excepciones import *

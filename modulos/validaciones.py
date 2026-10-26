@@ -1,14 +1,8 @@
 import re
 
 
-PATRON_EMAIL = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
 PATRON_LEGAJO = re.compile(r"^\d+$")
 PATRON_NOTA = re.compile(r"^(?:10(?:\.0+)?|[0-9](?:\.[0-9]+)?)$")
-
-
-def validar_email(email):
-    """Devuelve True si el email tiene un formato valido."""
-    return isinstance(email, str) and bool(PATRON_EMAIL.fullmatch(email.strip()))
 
 
 def validar_legajo(legajo):
@@ -25,65 +19,17 @@ def validar_nota(nota):
     return bool(PATRON_NOTA.fullmatch(str(nota).strip()))
 
 
-def _valor_registro(registro, posicion, clave):
-    """Obtiene un campo de un diccionario o una posicion de una secuencia."""
-    if isinstance(registro, dict):
-        return registro.get(clave)
-    return registro[posicion]
-
-
-def _valores(registros, posicion=None):
-    """Obtiene valores directos o una columna de registros."""
-    if posicion is None:
-        return registros
-    clave = {0: "id", 3: "legajo"}.get(posicion)
-    return [_valor_registro(registro, posicion, clave) for registro in registros]
-
-
-def existen_ids_duplicados(registros, posicion_id=0):
-    """Devuelve True si hay IDs repetidos en una lista de registros."""
-    ids = _valores(registros, posicion_id)
-    return len(ids) != len(set(ids))
-
-
-def existen_legajos_duplicados(registros, posicion_legajo=3):
-    """Devuelve True si hay legajos repetidos en una lista de registros."""
-    legajos = _valores(registros, posicion_legajo)
-    return len(legajos) != len(set(legajos))
-
-
-def ids_duplicados(registros, posicion_id=0):
-    """Devuelve el conjunto de IDs que aparecen mas de una vez."""
-    ids = _valores(registros, posicion_id)
+def valores_duplicados(registros, posicion=0):
+    """Devuelve el conjunto de valores de una columna que aparecen mas de una vez."""
     vistos = set()
     duplicados = set()
-    for identificador in ids:
-        if identificador in vistos:
-            duplicados.add(identificador)
-        vistos.add(identificador)
+    for registro in registros:
+        valor = registro[posicion]
+        if valor in vistos:
+            duplicados.add(valor)
+        vistos.add(valor)
     return duplicados
 
-
-def legajos_duplicados(registros, posicion_legajo=3):
-    """Devuelve el conjunto de legajos que aparecen mas de una vez."""
-    legajos = _valores(registros, posicion_legajo)
-    vistos = set()
-    duplicados = set()
-    for legajo in legajos:
-        if legajo in vistos:
-            duplicados.add(legajo)
-        vistos.add(legajo)
-    return duplicados
-
-
-def estudiantes_en_ambas_materias(inscriptos_materia_a, inscriptos_materia_b):
-    """Devuelve los IDs de estudiantes inscriptos en ambas materias."""
-    return set(inscriptos_materia_a).intersection(set(inscriptos_materia_b))
-
-
-def estudiantes_solo_en_materia(inscriptos_materia_a, inscriptos_materia_b):
-    """Devuelve los IDs inscriptos en A pero no en B."""
-    return set(inscriptos_materia_a).difference(set(inscriptos_materia_b))
 
 def pedir_entero(mensaje):
     #solicita un número entero al usuario y valida la entrada
@@ -119,6 +65,15 @@ def pedir_nota(mensaje):
                 print("Entrada inválida. La nota debe estar entre 0 y 10.")
     return nota
 
+def pedir_opcion(mensaje, cantidad):
+    #solicita una opción entre 1 y cantidad y repite hasta que sea válida
+    opciones_validas = [str(numero) for numero in range(1, cantidad + 1)]
+    opcion = input(mensaje).strip()
+    while opcion not in opciones_validas:
+        print(f"Opción inválida. Elija una opción entre 1 y {cantidad} e intente nuevamente.")
+        opcion = input(mensaje).strip()
+    return opcion
+
 def pedir_texto(mensaje):
     #solicita un texto no vacío
     texto = input(mensaje).strip()
@@ -126,8 +81,3 @@ def pedir_texto(mensaje):
         print("Entrada inválida. El campo no puede estar vacío.")
         texto = input(mensaje).strip()
     return texto
-
-hay_ids_duplicados = existen_ids_duplicados
-hay_legajos_duplicados = existen_legajos_duplicados
-interseccion_estudiantes = estudiantes_en_ambas_materias
-diferencia_estudiantes = estudiantes_solo_en_materia
