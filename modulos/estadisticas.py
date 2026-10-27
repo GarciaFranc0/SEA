@@ -23,18 +23,24 @@ def porcentaje_aprobados(calificaciones, id_materia):
     return porcentaje
 
 def notas_extremas(calificaciones):
-    nota_max = 0
-    nota_min = 0
-    if calificaciones:
-        nota_min = calificaciones[0][1]
-        nota_max = calificaciones[0][1]
-        for cal in calificaciones:
-            if cal[1] > nota_max:
-                nota_max = cal[1]
-            elif cal[1] < nota_min:
-                nota_min = cal[1]
-    return (nota_min, nota_max)
+    
+    if len(calificaciones) == 0:
+        return (0, 0)
+    elif len(calificaciones) == 1:
+        nota = calificaciones[0][1]
+        return (nota, nota)
+    else:
+        nota_min, nota_max = notas_extremas(calificaciones[1:])
+        nota = calificaciones[0][1]
 
+        if nota < nota_min:
+            nota_min = nota
+
+        if nota > nota_max:
+            nota_max = nota
+
+        return (nota_min, nota_max)
+    
 def porcentaje_promedio_alto(estudiantes, calificaciones):
     alumnos_calif_alta = 0
     total_estudiantes = len(estudiantes)
