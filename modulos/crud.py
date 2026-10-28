@@ -141,9 +141,20 @@ def mostrar_calificaciones(estudiantes, materias, calificaciones, id_estudiante)
     subtitulo(f"Boletín de Calificaciones: {estudiante[1]} {estudiante[2]}")
     print(f"  {'MATERIA':<25} | {'NOTA':<6} | {'ESTADO':<10}")
     separador()
-    for (id_materia, _), nota in calificaciones_estudiante:
+    mostrar_filas_calificaciones(calificaciones_estudiante, materias)
+    separador()
+
+def mostrar_filas_calificaciones(calificaciones, materias):
+    if len(calificaciones) == 0:
+        return
+    else:
+        id_materia = calificaciones[0][0][0]
+        nota = calificaciones[0][1]
+
         materia = buscar_materia(materias, id_materia)
         nombre_m = materia[1] if materia is not None else "Desconocida"
         estado = "Aprobado" if nota >= 4.0 else "Reprobado"
+
         print(f"  {nombre_m:<25} | {nota:<6.1f} | {estado:<10}")
-    separador()
+
+        mostrar_filas_calificaciones(calificaciones[1:], materias)
