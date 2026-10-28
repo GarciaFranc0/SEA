@@ -20,15 +20,25 @@ def validar_nota(nota):
 
 
 def valores_duplicados(registros, posicion=0):
-    """Devuelve el conjunto de valores de una columna que aparecen mas de una vez."""
     vistos = set()
     duplicados = set()
-    for registro in registros:
-        valor = registro[posicion]
+    return buscar_duplicados(registros, posicion, vistos, duplicados)
+
+
+def buscar_duplicados(registros, posicion, vistos, duplicados):
+    if len(registros) == 0:
+        return duplicados
+    else:
+        valor = registros[0][posicion]
+
         if valor in vistos:
             duplicados.add(valor)
+
         vistos.add(valor)
-    return duplicados
+
+        return buscar_duplicados(
+            registros[1:], posicion, vistos, duplicados
+        )
 
 
 def pedir_entero(mensaje):
