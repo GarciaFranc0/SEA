@@ -22,7 +22,7 @@ def porcentaje_aprobados(calificaciones, id_materia):
         porcentaje = (len(aprobados) / len(calificaciones_materia)) * 100
     return porcentaje
 
-def notas_extremas(calificaciones):
+def notas_extremas(calificaciones): 
     
     if len(calificaciones) == 0:
         return (0, 0)
@@ -40,18 +40,27 @@ def notas_extremas(calificaciones):
             nota_max = nota
 
         return (nota_min, nota_max)
+
+def contar_promedios_altos(estudiantes, calificaciones):
+    if len(estudiantes) == 0:
+        return 0
+    else:
+        id_est = estudiantes[0][0]
+        promedio = calcular_promedio(calificaciones, id_est)
+
+        if promedio >= 8:
+            return 1 + contar_promedios_altos(estudiantes[1:], calificaciones)
+        else:
+            return contar_promedios_altos(estudiantes[1:], calificaciones)
     
 def porcentaje_promedio_alto(estudiantes, calificaciones):
-    alumnos_calif_alta = 0
     total_estudiantes = len(estudiantes)
-    if total_estudiantes > 0:
-        for estudiante in estudiantes:
-            id_est = estudiante[0]
-            promedio = calcular_promedio(calificaciones, id_est)
-            if promedio >= 8.0:
-                alumnos_calif_alta += 1
+
+    if total_estudiantes == 0:
+        return 0.0
+    else:
+        alumnos_calif_alta = contar_promedios_altos(estudiantes, calificaciones)
         return (alumnos_calif_alta / total_estudiantes) * 100
-    return 0.0
 
 def estadistica_completa_estudiante(calificaciones, id_estudiante):
     notas_estudiante = [cal[1] for cal in calificaciones if cal[0][1] == id_estudiante]
