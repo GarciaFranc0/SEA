@@ -42,10 +42,18 @@ def _obtener_calificacion(calificaciones, id_materia, id_estudiante):
 def _validar_legajo(estudiantes, legajo, id_alumno):
     if not validar_legajo(legajo):
         raise DatoInvalido("El legajo debe contener solo dígitos.")
-    for otro in estudiantes:
-        if otro[3] == int(legajo) and otro[0] != id_alumno:
-            raise RegistroDuplicado(f"El legajo {legajo} ya pertenece a otro estudiante.")
 
+    if len(estudiantes) == 0:
+        return
+    else:
+        otro = estudiantes[0]
+
+        if otro[3] == int(legajo) and otro[0] != id_alumno:
+            raise RegistroDuplicado(
+                f"El legajo {legajo} ya pertenece a otro estudiante."
+            )
+
+        _validar_legajo(estudiantes[1:], legajo, id_alumno)
 def _validar_nota(nota):
     if not validar_nota(nota):
         raise DatoInvalido("La nota debe estar entre 0 y 10.")
