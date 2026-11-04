@@ -66,15 +66,18 @@ def estadistica_completa_estudiante(calificaciones, id_estudiante):
     notas_estudiante = [cal[1] for cal in calificaciones if cal[0][1] == id_estudiante]
     total_materias = len(notas_estudiante)
     promedio = 0.0
+    aprobadas = 0.0
     max_nota = 0.0
     min_nota = 0.0
     if notas_estudiante:
         promedio = sum(notas_estudiante) / total_materias
+        aprobadas = len([nota for nota in notas_estudiante if nota >= 4])
         max_nota = max(notas_estudiante)
         min_nota = min(notas_estudiante)
     return {
         "total": total_materias,
         "promedio": promedio,
+        "aprobadas": aprobadas,
         "maxima": max_nota,
         "minima": min_nota
     }

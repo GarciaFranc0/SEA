@@ -173,6 +173,7 @@ def ejecutar_sistema():
                                     if res['total'] > 0:
                                         print(f"  📚 Materias cursadas: {res['total']}")
                                         print(f"  📊 Promedio General:  {res['promedio']:.2f}")
+                                        print(f"  📝 Materias aprobadas: {res['aprobadas']}")
                                         print(f"  🔺 Nota más alta:     {res['maxima']}")
                                         print(f"  🔻 Nota más baja:     {res['minima']}")
                                     else:
