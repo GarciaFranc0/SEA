@@ -1,7 +1,7 @@
 from functools import reduce
 
 def _promedio(calificaciones, posicion, identificador):
-    # posicion 0 filtra por materia y posicion 1 por estudiante dentro de la clave (materia, estudiante)
+    """Promedio de notas filtrando por materia (posicion 0) o por estudiante (posicion 1). Devuelve 0.0 si no hay notas."""
     notas = list(map(lambda c: c[1], filter(lambda c: c[0][posicion] == identificador, calificaciones)))
     if notas:
         suma = reduce(lambda acumulado, nota: acumulado + nota, notas, 0)
@@ -9,12 +9,15 @@ def _promedio(calificaciones, posicion, identificador):
     return 0.0
 
 def calcular_promedio(calificaciones, id_estudiante):
+    """Promedio general de un estudiante."""
     return _promedio(calificaciones, 1, id_estudiante)
 
 def promedio_materia(calificaciones, id_materia):
+    """Promedio de todas las notas de una materia."""
     return _promedio(calificaciones, 0, id_materia)
 
 def porcentaje_aprobados(calificaciones, id_materia):
+    """Porcentaje (0-100) de notas aprobadas (>= 4) en una materia."""
     calificaciones_materia = list(filter(lambda c: c[0][0] == id_materia, calificaciones))
     porcentaje = 0.0
     if calificaciones_materia:
@@ -23,7 +26,7 @@ def porcentaje_aprobados(calificaciones, id_materia):
     return porcentaje
 
 def notas_extremas(calificaciones): 
-    
+    """Devuelve la tupla (nota_minima, nota_maxima) de todas las calificaciones."""
     if len(calificaciones) == 0:
         return (0, 0)
     elif len(calificaciones) == 1:
@@ -42,6 +45,7 @@ def notas_extremas(calificaciones):
         return (nota_min, nota_max)
 
 def contar_promedios_altos(estudiantes, calificaciones):
+    """Cantidad de estudiantes con promedio >= 8."""
     if len(estudiantes) == 0:
         return 0
     else:
@@ -54,6 +58,7 @@ def contar_promedios_altos(estudiantes, calificaciones):
             return contar_promedios_altos(estudiantes[1:], calificaciones)
     
 def porcentaje_promedio_alto(estudiantes, calificaciones):
+    """Porcentaje (0-100) de estudiantes con promedio alto sobre el total."""
     total_estudiantes = len(estudiantes)
 
     if total_estudiantes == 0:
@@ -63,6 +68,7 @@ def porcentaje_promedio_alto(estudiantes, calificaciones):
         return (alumnos_calif_alta / total_estudiantes) * 100
 
 def estadistica_completa_estudiante(calificaciones, id_estudiante):
+    """Resumen de un estudiante: total de materias, promedio, aprobadas, nota máxima y mínima."""
     notas_estudiante = [cal[1] for cal in calificaciones if cal[0][1] == id_estudiante]
     total_materias = len(notas_estudiante)
     promedio = 0.0
