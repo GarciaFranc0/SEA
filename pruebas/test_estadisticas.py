@@ -1,4 +1,4 @@
-from modulos.estadisticas import calcular_promedio, porcentaje_aprobados, notas_extremas
+from modulos.estadisticas import calcular_promedio, porcentaje_aprobados, notas_extremas, contar_aprobados_desaprobados, contar_registros, ultimos_registrados
 
 def obtener_calificaciones():
     return [
@@ -24,3 +24,20 @@ def test_notas_extremas():
     assert notas_extremas(calificaciones) == (2, 10)
     assert notas_extremas([]) == (0, 0)
     assert notas_extremas([[(1, 1), 5]]) == (5, 5)
+
+def test_contar_aprobados_desaprobados():
+    calificaciones = obtener_calificaciones()
+    assert contar_aprobados_desaprobados(calificaciones) == (5, 2)
+    assert contar_aprobados_desaprobados(calificaciones, 3) == (1, 1)
+    assert contar_aprobados_desaprobados(calificaciones, 9) == (0, 0)
+
+def test_contar_registros():
+    resultado = contar_registros([[1, "A", "B", 1]], [[1, "M"], [2, "N"]], obtener_calificaciones())
+    assert resultado == {"estudiantes": 1, "materias": 2, "calificaciones": 7}
+
+def test_ultimos_registrados():
+    registros = [1, 2, 3, 4, 5, 6, 7, 8]
+    assert ultimos_registrados(registros) == [4, 5, 6, 7, 8]
+    assert ultimos_registrados(registros, 2) == [7, 8]
+    assert ultimos_registrados([1, 2], 5) == [1, 2]
+    assert ultimos_registrados(registros, 0) == []
