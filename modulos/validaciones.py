@@ -20,12 +20,14 @@ def validar_nota(nota):
 
 
 def valores_duplicados(registros, posicion=0):
+    """Devuelve el conjunto de valores repetidos en la columna ``posicion`` de los registros."""
     vistos = set()
     duplicados = set()
     return buscar_duplicados(registros, posicion, vistos, duplicados)
 
 
 def buscar_duplicados(registros, posicion, vistos, duplicados):
+    """Recorre recursivamente los registros acumulando en ``duplicados`` los valores ya vistos."""
     if len(registros) == 0:
         return duplicados
     else:
@@ -42,7 +44,7 @@ def buscar_duplicados(registros, posicion, vistos, duplicados):
 
 
 def pedir_entero(mensaje):
-    #solicita un número entero al usuario y valida la entrada
+    """Pide un entero por consola y repite hasta que sea válido."""
     valido = False
     numero = 0
     while not valido:
@@ -59,7 +61,7 @@ def pedir_entero(mensaje):
     return numero
 
 def pedir_nota(mensaje):
-    #solicita una nota entre 0 y 10 y valida la entrada
+    """Pide una nota entre 0 y 10 y repite hasta que sea válida."""
     valido = False
     nota = 0.0
     while not valido:
@@ -76,7 +78,7 @@ def pedir_nota(mensaje):
     return nota
 
 def pedir_opcion(mensaje, cantidad):
-    #solicita una opción entre 1 y cantidad y repite hasta que sea válida
+    """Pide una opción de menú entre 1 y ``cantidad`` y devuelve el texto ingresado."""
     opciones_validas = [str(numero) for numero in range(1, cantidad + 1)]
     opcion = input(mensaje).strip()
     while opcion not in opciones_validas:
@@ -85,7 +87,7 @@ def pedir_opcion(mensaje, cantidad):
     return opcion
 
 def pedir_texto(mensaje):
-    #solicita un texto no vacío
+    """Pide un texto no vacío y repite hasta que sea válido."""
     texto = input(mensaje).strip()
     while not texto:
         print("Entrada inválida. El campo no puede estar vacío.")
