@@ -89,13 +89,36 @@ def estadistica_completa_estudiante(calificaciones, id_estudiante):
     }
 
 def estudiantes_comunes_materias(calificaciones, id_materia1, id_materia2):
+    """Conjunto de IDs de estudiantes que tienen nota en ambas materias (intersección)."""
     estudiantes_materia1 = set(map(lambda cal: cal[0][1], filter(lambda cal: cal[0][0] == id_materia1, calificaciones)))
     estudiantes_materia2 = set(map(lambda cal: cal[0][1], filter(lambda cal: cal[0][0] == id_materia2, calificaciones)))
     comunes = estudiantes_materia1 & estudiantes_materia2
     return comunes
 
 def estudiantes_sin_calificacion(estudiantes, calificaciones):
+    """Conjunto de IDs de estudiantes que no tienen ninguna nota (diferencia)."""
     id_estudiantes = set(map(lambda est: est[0], estudiantes))
     estudiantes_con_notas = set(map(lambda cal: cal[0][1], calificaciones))
     sin_calificacion = id_estudiantes - estudiantes_con_notas
     return sin_calificacion
+
+def contar_aprobados_desaprobados(calificaciones, id_materia=None):
+    """Devuelve la tupla (aprobados, desaprobados). Si se indica id_materia cuenta solo esa materia."""
+    if id_materia is not None:
+        calificaciones = list(filter(lambda c: c[0][0] == id_materia, calificaciones))
+    aprobados = len(list(filter(lambda c: c[1] >= 4, calificaciones)))
+    return (aprobados, len(calificaciones) - aprobados)
+
+def contar_registros(estudiantes, materias, calificaciones):
+    """Devuelve un diccionario con el total de estudiantes, materias y calificaciones."""
+    return {
+        "estudiantes": len(estudiantes),
+        "materias": len(materias),
+        "calificaciones": len(calificaciones),
+    }
+
+def ultimos_registrados(registros, cantidad=5):
+    """Devuelve los últimos ``cantidad`` elementos de una lista (usa slicing)."""
+    if cantidad <= 0:
+        return []
+    return registros[-cantidad:]
