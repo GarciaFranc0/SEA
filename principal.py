@@ -1,8 +1,8 @@
 import datos
 import modulos
 
-
 def ejecutar_sistema():
+    """Carga los datos, autentica al usuario y ejecuta el bucle del menú principal."""
     print("==================================================")
     print(" BIENVENIDO AL SISTEMA DE GESTIÓN ACADÉMICA ")
     print("==================================================")
@@ -140,8 +140,11 @@ def ejecutar_sistema():
                         print("  [5] 👤 Resumen académico completo por alumno")
                         print("  [6] 🔗 Estudiantes en común entre dos materias")
                         print("  [7] 🚫 Estudiantes sin calificaciones")
-                        print("  [8] ↩️  Volver al menú principal")
-                        sub_e = modulos.pedir_opcion("\nSeleccione reporte: ", 8)
+                        print("  [8] ✅ Cantidad de aprobados y desaprobados")
+                        print("  [9] 🔢 Total de registros del sistema")
+                        print("  [10] 🕒 Últimos registrados")
+                        print("  [11] ↩️  Volver al menú principal")
+                        sub_e = modulos.pedir_opcion("\nSeleccione reporte: ", 11)
 
                         match sub_e:
                             case "1":
@@ -196,6 +199,35 @@ def ejecutar_sistema():
                                     print(f"  IDs de estudiantes: {sorted(sin_notas)}")
                                 else:
                                     print("  Todos los estudiantes tienen calificaciones registradas.")
+                            case "8":
+                                id_m = modulos.pedir_entero("ID de la materia (0 para ver el total del sistema): ")
+                                if id_m == 0:
+                                    aprob, desaprob = modulos.contar_aprobados_desaprobados(datos.calificaciones)
+                                else:
+                                    aprob, desaprob = modulos.contar_aprobados_desaprobados(datos.calificaciones, id_m)
+                                modulos.subtitulo("Aprobados y desaprobados")
+                                print(f"  ✅ Aprobados:    {aprob}")
+                                print(f"  ❌ Desaprobados: {desaprob}")
+                                modulos.separador()
+                            case "9":
+                                tot = modulos.contar_registros(datos.estudiantes, datos.materias, datos.calificaciones)
+                                modulos.subtitulo("Total de registros del sistema")
+                                print(f"  🎓 Estudiantes:    {tot['estudiantes']}")
+                                print(f"  📚 Materias:       {tot['materias']}")
+                                print(f"  📝 Calificaciones: {tot['calificaciones']}")
+                                modulos.separador()
+                            case "10":
+                                modulos.subtitulo("Últimos 5 estudiantes registrados")
+                                for est in modulos.ultimos_registrados(datos.estudiantes):
+                                    print(f"  ID {est[0]} | {est[1]} {est[2]} | Legajo {est[3]}")
+                                modulos.subtitulo("Últimas 5 calificaciones registradas")
+                                for (id_m, id_e), nota in modulos.ultimos_registrados(datos.calificaciones):
+                                    est = modulos.buscar_estudiante(datos.estudiantes, id_e)
+                                    mat = modulos.buscar_materia(datos.materias, id_m)
+                                    nombre_est = f"{est[1]} {est[2]}" if est is not None else "Desconocido"
+                                    nombre_mat = mat[1] if mat is not None else "Desconocida"
+                                    print(f"  {nombre_est} | {nombre_mat} | {nota}")
+                                modulos.separador()
                     else:
                         res = modulos.estadistica_completa_estudiante(datos.calificaciones, id_estudiante_sesion)
                         print(f"\n--- TU RESUMEN ACADÉMICO ---")
@@ -212,6 +244,8 @@ def ejecutar_sistema():
         except modulos.ErrorGestion as e:
             modulos.error(str(e))
 
+
+"""Comprobación de ejecución directa del script principal."""
 if __name__ == "__main__":
     try:
         ejecutar_sistema()
