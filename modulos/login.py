@@ -1,6 +1,7 @@
 from .validaciones import validar_legajo
 
 def login_admin():
+    """Pide usuario y contraseña de administrador (máximo 3 intentos). Devuelve True si el acceso fue exitoso."""
     valido = False
     intentos = 0
     max_intentos = 3
@@ -20,6 +21,7 @@ def login_admin():
     return valido
 
 def login_estudiante(estudiantes):
+    """Pide el legajo de un estudiante (máximo 3 intentos). Devuelve la tupla (valido, id_estudiante)."""
     valido = False
     intentos = 0
     max_intentos = 3

@@ -1,3 +1,5 @@
+"""estudiantes y materias en texto separado por ';' (.csv) y calificaciones en JSON."""
+
 import csv
 import json
 import os
@@ -32,6 +34,7 @@ def _texto_no_vacio(valor, campo):
 
 
 def _convertir_estudiante(fila):
+    """Convierte una lista de 4 textos en [id, nombre, apellido, legajo] validando cada campo."""
     if len(fila) != len(ENCABEZADO_ESTUDIANTES):
         raise ValueError(f"se esperaban {len(ENCABEZADO_ESTUDIANTES)} columnas y hay {len(fila)}")
     id_alumno, nombre, apellido, legajo = fila
@@ -44,6 +47,7 @@ def _convertir_estudiante(fila):
 
 
 def _convertir_materia(fila):
+    """Convierte una lista de 2 textos en [id, nombre] validando cada campo."""
     if len(fila) != len(ENCABEZADO_MATERIAS):
         raise ValueError(f"se esperaban {len(ENCABEZADO_MATERIAS)} columnas y hay {len(fila)}")
     id_materia, nombre = fila
@@ -51,6 +55,7 @@ def _convertir_materia(fila):
 
 
 def _convertir_calificacion(item):
+    """Convierte un diccionario leído del JSON en [(id_materia, id_estudiante), nota]."""
     if not isinstance(item, dict):
         raise ValueError("cada calificación debe ser un objeto JSON")
     try:
@@ -82,6 +87,7 @@ def _leer_csv(ruta, encabezado, convertir):
 
 
 def _leer_estudiantes(ruta):
+    """Lee el archivo de estudiantes y verifica que no haya IDs ni legajos repetidos."""
     estudiantes = _leer_csv(ruta, ENCABEZADO_ESTUDIANTES, _convertir_estudiante)
     repetidos = valores_duplicados(estudiantes)
     if repetidos:
@@ -93,6 +99,7 @@ def _leer_estudiantes(ruta):
 
 
 def _leer_materias(ruta):
+    """Lee el archivo de materias y verifica que no haya IDs repetidos."""
     materias = _leer_csv(ruta, ENCABEZADO_MATERIAS, _convertir_materia)
     repetidos = valores_duplicados(materias)
     if repetidos:
@@ -101,6 +108,7 @@ def _leer_materias(ruta):
 
 
 def _leer_calificaciones(ruta):
+    """Lee el JSON de calificaciones; ignora las inválidas y rechaza el archivo si hay repetidas."""
     with open(ruta, "r", encoding="utf-8") as archivo:
         contenido = json.load(archivo)
     if not isinstance(contenido, list):
@@ -118,6 +126,7 @@ def _leer_calificaciones(ruta):
 
 
 def _escribir_csv(ruta, encabezado, registros):
+    """Escribe un archivo de texto: encabezado y una línea por registro, separados por ';'."""
     with open(ruta, "w", encoding="utf-8", newline="") as archivo:
         escritor = csv.writer(archivo)
         escritor.writerow(encabezado)
@@ -125,14 +134,17 @@ def _escribir_csv(ruta, encabezado, registros):
 
 
 def _escribir_estudiantes(ruta, estudiantes):
+    """Guarda los estudiantes en un archivo de texto."""
     _escribir_csv(ruta, ENCABEZADO_ESTUDIANTES, estudiantes)
 
 
 def _escribir_materias(ruta, materias):
+    """Guarda las materias en un archivo de texto."""
     _escribir_csv(ruta, ENCABEZADO_MATERIAS, materias)
 
 
 def _escribir_calificaciones(ruta, calificaciones):
+    """Guarda las calificaciones en JSON, una entrada por calificación."""
     contenido = [
         {"id_materia": clave[0], "id_estudiante": clave[1], "nota": nota}
         for clave, nota in calificaciones

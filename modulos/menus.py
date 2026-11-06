@@ -1,6 +1,7 @@
 from .interfaz import titulo, separador
 
 def mostrar_menu_principal():
+    """Muestra el menú principal."""
     titulo("Menú Principal")
     print("  [1] 🎓 Gestión de Estudiantes")
     print("  [2] 📚 Gestión de Materias")
@@ -10,6 +11,7 @@ def mostrar_menu_principal():
     separador()
 
 def sub_menu_estudiantes(rol):
+    """Muestra el submenú de estudiantes según el rol (admin o estudiante)."""
     titulo("Gestión de Estudiantes")
     if rol == "admin":
         print("  [1] ➕ Agregar estudiante")
@@ -23,6 +25,7 @@ def sub_menu_estudiantes(rol):
     separador()
 
 def sub_menu_materias(rol):
+    """Muestra el submenú de materias según el rol (admin o estudiante)."""
     titulo("Gestión de Materias")
     if rol == "admin":
         print("  [1] ➕ Agregar materia")
@@ -36,6 +39,7 @@ def sub_menu_materias(rol):
     separador()
 
 def sub_menu_calificaciones(rol):
+    """Muestra el submenú de calificaciones según el rol (admin o estudiante)."""
     titulo("Gestión de Calificaciones")
     if rol == "admin":
         print("  [1] ➕ Registrar calificación")
